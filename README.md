@@ -37,7 +37,7 @@ Desarrollar una plataforma para que las personas puedan:
     - Reporte de contenido
 
 ---
-## 🔄 **Versión 1.0**
+## 🔄 **Versión 1.2**
 
 
 📌 *"La calidad de tus preguntas determina la calidad de tu aprendizaje"* - Adaptación de Voltaire
