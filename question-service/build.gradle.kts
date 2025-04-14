@@ -22,7 +22,7 @@ extra["springCloudVersion"] = "2021.0.9"
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.liquibase:liquibase-core")
-	implementation("org.springframework.boot:spring-boot-starter-web")// para werbservice
+	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	runtimeOnly("org.postgresql:postgresql")
