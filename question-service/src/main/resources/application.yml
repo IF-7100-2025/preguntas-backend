@@ -13,6 +13,8 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 server:
   port: ${SERVER_PORT:8082}
+
+
 eureka:
   client:
     registerWithEureka: true
@@ -20,6 +22,9 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
   instance:
     preferIpAddress: true
+
+ia-service:
+  url: http://localhost:8080/categorize
 
 liquibase:
   change-log: classpath:db/changelog/db.changelog-master.yaml

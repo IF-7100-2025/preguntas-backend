@@ -22,12 +22,4 @@ CREATE TABLE question_category (
     category_id INT NOT NULL REFERENCES categories(id),
     PRIMARY KEY (question_id, category_id)
 );
--- TODO:  falta la tabla de el usuario-pregunta (que es una relacion 1-n)
--- TODO:  falta la tabla de quiz-user (que es una relacion 1-n)
--- TODO:  falta la tabla de historial de quizzes (que tiene preguntas, respuestas, puntuacion, etc)
--- cada pregunta es parte de uno  o mas quizzes
--- cada quiz es parte de uno o mas usuarios
--- cada usuario puede tener cero, uno o mas quizzes
--- cada pregunta tiene una o mas respuestas(al menos una y no todas correcta
--- cada respuesta tiene una o mas opciones
 
