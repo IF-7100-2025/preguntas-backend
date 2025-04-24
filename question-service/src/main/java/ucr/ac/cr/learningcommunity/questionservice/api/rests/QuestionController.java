@@ -8,29 +8,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.request.CategorizeSuggestionRequest;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.request.QuestionRequest;
-import ucr.ac.cr.learningcommunity.questionservice.api.types.response.CategoryResponse;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.CreateQuestionHandler;
-
-import java.util.List;
+import ucr.ac.cr.learningcommunity.questionservice.handlers.queries.GetCategorySuggestionsQuery;
 
 @RestController
 @RequestMapping("/api/questions")
 public class QuestionController {
 
-    private final IAIntegrationClient iaIntegrationClient;
+    private final GetCategorySuggestionsQuery suggestionsHandler;
     private final CreateQuestionHandler createQuestionHandler;
 
     @Autowired
-    public QuestionController(IAIntegrationClient iaIntegrationClient, CreateQuestionHandler createQuestionHandler) {
-        this.iaIntegrationClient = iaIntegrationClient;
+    public QuestionController(
+            GetCategorySuggestionsQuery suggestionsHandler,
+            CreateQuestionHandler createQuestionHandler) {
+        this.suggestionsHandler = suggestionsHandler;
         this.createQuestionHandler = createQuestionHandler;
     }
 
     @PostMapping("/suggestions")
-    public ResponseEntity<List<CategoryResponse>> getCategorySuggestions(@RequestBody CategorizeSuggestionRequest request) {
-        List<CategoryResponse> suggestedCategories = iaIntegrationClient.getCategorySuggestionsFromIA(request.question());
-       // falta menejar mejor con results y mapear bien las responses
-        return ResponseEntity.ok(suggestedCategories);
+    public ResponseEntity<?> getCategorySuggestions(
+            @RequestBody CategorizeSuggestionRequest request) {
+        var result = suggestionsHandler.getCategorySuggestions(request.question());
+        return switch (result) {
+            case GetCategorySuggestionsQuery.Result.Success success -> ResponseEntity.ok(success.categories());
+            case GetCategorySuggestionsQuery.Result.Unauthorized unauthorized -> ResponseEntity.status(unauthorized.status()).body(unauthorized.msg());
+            case GetCategorySuggestionsQuery.Result.InternalError internalError -> ResponseEntity.status(internalError.status()).body(internalError.msg());
+            case GetCategorySuggestionsQuery.Result.CategorySuggestionOutOfService categorySuggestionOutOfService -> ResponseEntity.status(categorySuggestionOutOfService.status()).body(categorySuggestionOutOfService.msg());
+            case GetCategorySuggestionsQuery.Result.SuggestionNotFound suggestionNotFound -> ResponseEntity.status(suggestionNotFound.status()).body(suggestionNotFound.msg());
+        };
     }
     @PostMapping
     public ResponseEntity<Object> createQuestion(@RequestBody QuestionRequest request) {
