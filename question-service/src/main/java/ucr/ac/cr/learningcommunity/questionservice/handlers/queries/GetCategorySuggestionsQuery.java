@@ -11,7 +11,5 @@ public interface GetCategorySuggestionsQuery {
         record Success(List<CategoryResponse> categories) implements Result {}
         record Unauthorized(int status, String msg) implements Result {}
         record InternalError(int status, String msg) implements Result {}
-        record CategorySuggestionOutOfService(int status, String msg) implements Result {}
-        record SuggestionNotFound(int status, String msg) implements Result {}
     }
 }

@@ -19,19 +19,32 @@ public class GetCategorySuggestionsQueryImpl implements GetCategorySuggestionsQu
     }
 
     @Override
-    public Result getCategorySuggestions(String question) throws BaseException {
+    public Result getCategorySuggestions(String question) {
+        if (question == null || question.isBlank()) {
+            throw BaseException.exceptionBuilder()
+                    .code(ErrorCode.VALIDATION_ERROR)
+                    .message(ErrorCode.VALIDATION_ERROR.getDefaultMessage()+ ", Question is required")
+                    .build();
+        }
         try {
             List<CategoryResponse> suggestions = iaIntegrationClient.getCategorySuggestionsFromIA(question);
+
             if (suggestions.isEmpty()) {
-                return new Result.SuggestionNotFound(204, "Category suggestions not found");
+                throw BaseException.exceptionBuilder()
+                        .code(ErrorCode.CATEGORY_SUGGESTION_NOT_FOUND)
+                        .message(ErrorCode.CATEGORY_SUGGESTION_NOT_FOUND.getDefaultMessage())
+                        .build();
             }
+
             return new Result.Success(suggestions);
+
         } catch (BaseException e) {
             throw e;
+
         } catch (Exception e) {
             throw BaseException.exceptionBuilder()
                     .code(ErrorCode.IA_SERVICE_ERROR)
-                    .message("Unexpected error getting category suggestions: " + e.getMessage())
+                    .message(ErrorCode.IA_SERVICE_ERROR.getDefaultMessage())
                     .build();
         }
     }

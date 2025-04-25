@@ -34,12 +34,10 @@ public class QuestionController {
             case GetCategorySuggestionsQuery.Result.Success success -> ResponseEntity.ok(success.categories());
             case GetCategorySuggestionsQuery.Result.Unauthorized unauthorized -> ResponseEntity.status(unauthorized.status()).body(unauthorized.msg());
             case GetCategorySuggestionsQuery.Result.InternalError internalError -> ResponseEntity.status(internalError.status()).body(internalError.msg());
-            case GetCategorySuggestionsQuery.Result.CategorySuggestionOutOfService categorySuggestionOutOfService -> ResponseEntity.status(categorySuggestionOutOfService.status()).body(categorySuggestionOutOfService.msg());
-            case GetCategorySuggestionsQuery.Result.SuggestionNotFound suggestionNotFound -> ResponseEntity.status(suggestionNotFound.status()).body(suggestionNotFound.msg());
         };
     }
     @PostMapping
-    public ResponseEntity<Object> createQuestion(@RequestBody QuestionRequest request) {
+    public ResponseEntity<?> createQuestion(@RequestBody QuestionRequest request) {
         var result = createQuestionHandler.createQuestion(
                 new CreateQuestionHandler.Command(request.question(),
                        request.imageBase64(),

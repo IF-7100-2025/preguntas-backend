@@ -3,11 +3,11 @@ package ucr.ac.cr.learningcommunity.questionservice.models;
 
 public class BaseException extends RuntimeException {
 
-    private final ErrorCode errorCode;
+    private final ErrorCode status;
 
-    private BaseException(ErrorCode errorCode, String message) {
-        super(message);
-        this.errorCode = errorCode;
+    private BaseException(ErrorCode status, String msg) {
+        super(msg);
+        this.status = status;
     }
 
     public static BaseExceptionBuilder exceptionBuilder() {
@@ -15,26 +15,26 @@ public class BaseException extends RuntimeException {
     }
 
     public ErrorCode getErrorCode() {
-        return errorCode;
+        return status;
     }
 
     public static class BaseExceptionBuilder {
 
-        private ErrorCode errorCode;
-        private String message;
+        private ErrorCode status;
+        private String msg;
 
         public BaseExceptionBuilder code(ErrorCode errorCode) {
-            this.errorCode = errorCode;
+            this.status = errorCode;
             return this;
         }
 
-        public BaseExceptionBuilder message(String message) {
-            this.message = message;
+        public BaseExceptionBuilder message(String msg) {
+            this.msg = msg;
             return this;
         }
 
         public BaseException build() {
-            return new BaseException(errorCode, message);
+            return new BaseException(status, msg);
         }
     }
 }

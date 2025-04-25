@@ -49,7 +49,7 @@ public class IAIntegrationClient {
             if (!response.getStatusCode().is2xxSuccessful()) {
                 throw BaseException.exceptionBuilder()
                         .code(ErrorCode.IA_SERVICE_ERROR)
-                        .message("El servicio de IA respondió con código: " + response.getStatusCode())
+                        .message(ErrorCode.IA_SERVICE_ERROR.getDefaultMessage())
                         .build();
             }
             return response.getBody() != null ? response.getBody() : Collections.emptyList();
@@ -57,7 +57,7 @@ public class IAIntegrationClient {
         } catch (RestClientException e) {
             throw BaseException.exceptionBuilder()
                     .code(ErrorCode.IA_SERVICE_COMMUNICATION_ERROR)
-                    .message("Error comunicating with IA service, please try again later")
+                    .message(ErrorCode.IA_SERVICE_COMMUNICATION_ERROR.getDefaultMessage())
                     .build();
         }
     }
