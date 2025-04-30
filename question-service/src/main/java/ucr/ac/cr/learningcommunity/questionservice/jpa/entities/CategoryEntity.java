@@ -1,9 +1,10 @@
 package ucr.ac.cr.learningcommunity.questionservice.jpa.entities;
 
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "category")
 public class CategoryEntity {
 
 
@@ -11,6 +12,7 @@ public class CategoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Usamos SERIAL en PostgreSQL
     private Long id;
 
+    @Column(nullable = false, unique = true, length = 100)
     private String name;
 
     // Getters y Setters

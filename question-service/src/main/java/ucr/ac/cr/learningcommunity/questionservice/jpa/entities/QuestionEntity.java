@@ -2,18 +2,19 @@ package ucr.ac.cr.learningcommunity.questionservice.jpa.entities;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 
 @Entity
-@Table(name = "questions")
+@Table(name = "question")
 public class QuestionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(nullable = false)
     private String text;
 
     @Column(name = "image", columnDefinition = "BYTEA")
@@ -31,7 +32,18 @@ public class QuestionEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private java.util.Date createdAt = new java.util.Date();
 
-    // Getters y Setters
+    @Column(length = 1000)
+    private String explanation;
+
+    @Column(name = "likes_count")
+    private Integer likes;
+
+    @Column(name = "dislikes_count")
+    private Integer dislikes;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AnswerOptionEntity> answerOptions = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -64,11 +76,43 @@ public class QuestionEntity {
         this.categories = categories;
     }
 
-    public java.util.Date getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(java.util.Date createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getExplanation() {
+        return explanation;
+    }
+
+    public void setExplanation(String explanation) {
+        this.explanation = explanation;
+    }
+
+    public Integer getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Integer likes) {
+        this.likes = likes;
+    }
+
+    public Integer getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(Integer dislikes) {
+        this.dislikes = dislikes;
+    }
+
+    public Set<AnswerOptionEntity> getAnswerOptions() {
+        return answerOptions;
+    }
+
+    public void setAnswerOptions(Set<AnswerOptionEntity> answerOptions) {
+        this.answerOptions = answerOptions;
     }
 }

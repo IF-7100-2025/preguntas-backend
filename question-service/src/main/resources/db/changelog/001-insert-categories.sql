@@ -1,4 +1,4 @@
-INSERT INTO categories (name) VALUES
+INSERT INTO category (name) VALUES
     ('Matemáticas'),
     ('Geometría'),
     ('Álgebra'),
