@@ -24,3 +24,4 @@
 hs_err_pid*
 replay_pid*
 .idea/
+ia-service/src/main/resources/application-secret.yml

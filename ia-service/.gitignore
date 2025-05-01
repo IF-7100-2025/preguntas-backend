@@ -36,6 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 .idea/
-src/main/resources/application-secret.yml
-./application-secret.yml
+src/main/java/resources/application-secret.yml
+
 
