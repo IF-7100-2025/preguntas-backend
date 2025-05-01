@@ -4,7 +4,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
-group = "ucr.ac.cr.lerningcommunity"
+group = "ucr.ac.cr.learningcommunity"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -15,11 +15,17 @@ java {
 
 repositories {
 	mavenCentral()
+	maven { url = uri("https://repo.spring.io/milestone") }
+	maven { url = uri("https://repo.spring.io/snapshot") } // ¡Descomenta esta línea!
+	maven { url = uri("https://repo.maven.apache.org/maven2") }
 }
 
-extra["springCloudVersion"] = "2024.0.1"
+extra["springCloudVersion"] = "2024.0.0"
+extra["springAiVersion"] = "0.8.1"
 
 dependencies {
+	implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter")
+	implementation("org.springframework.ai:spring-ai-openai")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.liquibase:liquibase-core")
@@ -29,9 +35,11 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+
 dependencyManagement {
 	imports {
 		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+	    mavenBom( "org.springframework.ai:spring-ai-bom:${property("springAiVersion")}")
 	}
 }
 

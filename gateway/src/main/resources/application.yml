@@ -11,14 +11,10 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: basic-service
-          uri: lb://basic-service
+        - id: ia-service
+          uri: lb://ia-service
           predicates:
             - Path=/api/public/basic/**, /api/private/basic/**
-        - id: authentication-service
-          uri: lb://authentication-service
-          predicates:
-            - Path=/api/public/auth/**, /api/private/auth/**
 logging:
   level:
     org:

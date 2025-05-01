@@ -1,1 +1,1 @@
-rootProject.name = "iaservice"
+rootProject.name = "ia-service"
