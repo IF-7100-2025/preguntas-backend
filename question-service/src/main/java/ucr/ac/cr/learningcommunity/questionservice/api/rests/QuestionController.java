@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.request.CategorizeSuggestionRequest;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.request.QuestionRequest;
+import ucr.ac.cr.learningcommunity.questionservice.api.types.response.ApiResponse;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.CreateQuestionHandler;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.queries.GetCategorySuggestionsQuery;
 
@@ -38,15 +39,11 @@ public class QuestionController {
     }
     @PostMapping
     public ResponseEntity<?> createQuestion(@RequestBody QuestionRequest request) {
-        var result = createQuestionHandler.createQuestion(
-                new CreateQuestionHandler.Command(request.question(),
-                       request.imageBase64(),
-                       request.categories()));
-        switch (result) {
-            case CreateQuestionHandler.Result.Success success ->  ResponseEntity.ok().body(success.msg());
-            case CreateQuestionHandler.Result.Unauthorized unauthorized ->  ResponseEntity.status(unauthorized.status()).body(unauthorized.msg());
-            case CreateQuestionHandler.Result.InternalError internalError ->  ResponseEntity.status(internalError.status()).body(internalError.msg());
-        }
-        return ResponseEntity.ok(result);
+        var result = createQuestionHandler.createQuestion(request);
+       return switch (result) {
+            case CreateQuestionHandler.Result.Success success ->  ResponseEntity.ok().body(new ApiResponse(success.status(), success.msg()));
+            case CreateQuestionHandler.Result.Unauthorized unauthorized ->  ResponseEntity.status(unauthorized.status()).body(new ApiResponse(unauthorized.status(), unauthorized.msg()));
+            case CreateQuestionHandler.Result.InternalError internalError ->  ResponseEntity.status(internalError.status()).body(new ApiResponse(internalError.status(), internalError.msg()));
+        };
     }
 }

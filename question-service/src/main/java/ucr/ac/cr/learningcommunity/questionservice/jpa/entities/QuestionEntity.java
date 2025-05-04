@@ -1,19 +1,20 @@
 package ucr.ac.cr.learningcommunity.questionservice.jpa.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 
 @Entity
 @Table(name = "question")
 public class QuestionEntity {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id", nullable = false)
+    private UUID id;
     @Column(nullable = false)
     private String text;
 
@@ -30,27 +31,19 @@ public class QuestionEntity {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private java.util.Date createdAt = new java.util.Date();
+    private java.util.Date createdAt = new Date();
 
     @Column(length = 1000)
     private String explanation;
 
     @Column(name = "likes_count")
-    private Integer likes;
+    private Integer likes = 0;
 
     @Column(name = "dislikes_count")
-    private Integer dislikes;
+    private Integer dislikes = 0;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AnswerOptionEntity> answerOptions = new HashSet<>();
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getText() {
         return text;
@@ -114,5 +107,13 @@ public class QuestionEntity {
 
     public void setAnswerOptions(Set<AnswerOptionEntity> answerOptions) {
         this.answerOptions = answerOptions;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 }

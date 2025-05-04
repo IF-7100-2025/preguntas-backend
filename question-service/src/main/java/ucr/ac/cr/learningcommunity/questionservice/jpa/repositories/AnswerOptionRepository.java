@@ -1,4 +1,7 @@
 package ucr.ac.cr.learningcommunity.questionservice.jpa.repositories;
 
-public class AnswerOptionRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.AnswerOptionEntity;
+
+public interface AnswerOptionRepository extends JpaRepository<AnswerOptionEntity, Long> {
 }
