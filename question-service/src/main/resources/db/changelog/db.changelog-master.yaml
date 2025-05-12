@@ -27,3 +27,16 @@ databaseChangeLog:
       rollback:
         - sql:
             DELETE FROM categories;
+  - changeSet:
+      id: 3
+      author: brandon
+      changes:
+        - sqlFile:
+            path: 002-insert-more-categories.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+      rollback:
+        - sql:
+            DELETE FROM categories;
+

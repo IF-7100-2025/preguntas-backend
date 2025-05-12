@@ -9,8 +9,6 @@ import ucr.ac.cr.learningcommunity.iaservice.handlers.commands.CategorizeQuestio
 import ucr.ac.cr.learningcommunity.iaservice.jpa.entities.CategoryEmbedding;
 import ucr.ac.cr.learningcommunity.iaservice.jpa.repositories.CategoryEmbeddingRepository;
 import ucr.ac.cr.learningcommunity.iaservice.models.ErrorCode;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,8 +29,8 @@ public class CategorizeQuestionHandlerImpl implements CategorizeQuestionHandler 
         if (command.questionText() == null || command.questionText().isBlank()) {
             return new Result.ValidationError(ErrorCode.VALIDATION_ERROR.getHttpStatus(), "The question text cannot be empty.");
         }
-        if (command.questionText().length() > 200 || command.questionText().length()<20 ) {
-            return new Result.ValidationError(ErrorCode.VALIDATION_ERROR.getHttpStatus(), "The question text not longer valid.");
+        if (command.questionText().length() > 200 || command.questionText().length()<5 ) {
+            return new Result.ValidationError(ErrorCode.VALIDATION_ERROR.getHttpStatus(), "The question text is not valid.");
         }
         try {
             List<Double> questionEmbedding = embeddingClient.embed(command.questionText());
