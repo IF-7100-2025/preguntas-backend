@@ -28,7 +28,7 @@ public class IAIntegrationClient {
 
     public List<CategoryResponse> getCategorySuggestionsFromIA(String questionText) {
         try {
-            String url = iaServiceUrl + "/suggest";
+            String url = iaServiceUrl + "/categorize";
 
             // configurar headers
             HttpHeaders headers = new HttpHeaders();

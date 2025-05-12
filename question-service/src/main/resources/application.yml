@@ -21,10 +21,10 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
   instance:
-    preferIpAddress: true
+    preferIpAddress: tru
 
 ia-service:
-  url: http://localhost:8080/categorize
+  url: http://localhost:8083/api/private/ia
 
 liquibase:
   change-log: classpath:db/changelog/db.changelog-master.yaml
