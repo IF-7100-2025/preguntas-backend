@@ -21,7 +21,7 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
   instance:
-    preferIpAddress: tru
+    preferIpAddress: true
 
 ia-service:
   url: http://localhost:8083/api/private/ia
