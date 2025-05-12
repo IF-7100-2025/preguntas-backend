@@ -15,6 +15,10 @@ spring:
           uri: lb://ia-service
           predicates:
             - Path=/api/public/basic/**, /api/private/basic/**
+        - id: question-service
+          uri: lb://question-service
+          predicates:
+            - Path=/api/public/basic/**, /api/private/basic/**
 logging:
   level:
     org:
