@@ -14,6 +14,8 @@ import ucr.ac.cr.learningcommunity.iaservice.models.BaseException;
 import ucr.ac.cr.learningcommunity.iaservice.models.ErrorCode;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryEmbeddingService {
@@ -34,35 +36,31 @@ public class CategoryEmbeddingService {
         this.categoryEmbeddingRepository = categoryEmbeddingRepository;
     }
 
-    @Transactional  // dura aproximadamente 4 minutos en ponerle embeddeing a 183 categorias
-    public String updateCategoriesWithEmbeddings() {
-        try {
-        List<CategoryEntity> categories = categoryRepository.findAll();
-        for (CategoryEntity category : categories) {
-            try {
-                List<Double> embedding = embeddingClient.embed(category.getName());
-                CategoryEmbedding existingEmbedding = categoryEmbeddingRepository.findByCategoryId(category.getId());
-                if (existingEmbedding != null) {
-                    existingEmbedding.setEmbedding(embedding);
-                    categoryEmbeddingRepository.save(existingEmbedding);
-                } else {
-                    CategoryEmbedding newEmbedding = new CategoryEmbedding(category, embedding);
-                    categoryEmbeddingRepository.save(newEmbedding);
-                }
-            } catch (Exception e) {
-                throw BaseException.exceptionBuilder()
-                        .code(ErrorCode.IA_CATEGORY_SERVICE_ERROR)
-                        .message(ErrorCode.IA_CATEGORY_SERVICE_ERROR.getDefaultMessage() + " Error embedding category " + category.getName())
-                        .build();
-            }
-        }
-        return "Embeddings updated successfully.";
-    } catch (Exception e) {
-        throw BaseException.exceptionBuilder()
-                .code(ErrorCode.IA_CATEGORY_SERVICE_ERROR)
-                .message(ErrorCode.IA_CATEGORY_SERVICE_ERROR.getDefaultMessage() + " Error updating embeddings"+e.getMessage())
-                .build();
-    }
-    }
+      // dura aproximadamente 1.7 segs en ponerle embeddeing a 438 categorias
+      public String updateCategoriesWithEmbeddings() {
+          List<CategoryEntity> categories = categoryRepository.findAll();
+          Map<Long, CategoryEmbedding> existingEmbeddings = categoryEmbeddingRepository.findAll().stream()
+                  .collect(Collectors.toMap(e -> e.getCategory().getId(), e -> e));
+          categories.parallelStream().forEach(category -> {
+              try {
+                  CategoryEmbedding existing = existingEmbeddings.get(category.getId());
+                  if (existing != null && existing.getEmbedding() != null && !existing.getEmbedding().isEmpty()) {
+                      return;
+                  }
+                  List<Double> embedding = embeddingClient.embed(category.getName());
+                  CategoryEmbedding embeddingEntity = existingEmbeddings.get(category.getId());
+                  if (embeddingEntity != null) {
+                      embeddingEntity.setEmbedding(embedding);
+                  } else {
+                      embeddingEntity = new CategoryEmbedding(category, embedding);
+                  }
+                  categoryEmbeddingRepository.save(embeddingEntity);
+              } catch (Exception e) {
+                  System.err.println("Error embedding category: " + category.getName() + " -> " + e.getMessage());
+              }
+          });
+          return "Embeddings updated successfully.";
+      }
+
 }
 

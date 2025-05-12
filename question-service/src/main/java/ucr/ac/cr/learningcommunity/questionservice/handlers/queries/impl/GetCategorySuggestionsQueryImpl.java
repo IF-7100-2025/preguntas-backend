@@ -23,7 +23,13 @@ public class GetCategorySuggestionsQueryImpl implements GetCategorySuggestionsQu
         if (question == null || question.isBlank()) {
             throw BaseException.exceptionBuilder()
                     .code(ErrorCode.VALIDATION_ERROR)
-                    .message(ErrorCode.VALIDATION_ERROR.getDefaultMessage()+ ", Question is required")
+                    .message(ErrorCode.VALIDATION_ERROR.getDefaultMessage()+ ", the question is required")
+                    .build();
+        }
+        if (question.length() < 5 || question.length() > 200) {
+            throw BaseException.exceptionBuilder()
+                    .code(ErrorCode.VALIDATION_ERROR)
+                    .message(ErrorCode.VALIDATION_ERROR.getDefaultMessage()+ ", the question is no longer valid")
                     .build();
         }
         try {

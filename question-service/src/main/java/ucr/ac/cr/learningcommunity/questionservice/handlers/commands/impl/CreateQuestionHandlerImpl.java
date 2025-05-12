@@ -63,7 +63,7 @@ public class CreateQuestionHandlerImpl implements CreateQuestionHandler {
         }
 
         if (explanation.length() < 10 || explanation.length() > 999) {
-            throw validationError("Explanation is not longer valid");
+            throw validationError("Explanation is no longer valid");
         }
     }
     private void validateCategories(List<String> categories) {
@@ -73,6 +73,9 @@ public class CreateQuestionHandlerImpl implements CreateQuestionHandler {
 
         if (categories.size() > 3) {
             throw validationError("Maximum 3 categories allowed");
+        }
+        if (categories.size() != categories.stream().distinct().count()) {
+            throw validationError("Duplicate categories are not allowed");
         }
     }
 
@@ -97,12 +100,13 @@ public class CreateQuestionHandlerImpl implements CreateQuestionHandler {
     }
 
     private List<CategoryEntity> processCategories(List<String> categoryNames) {
+        if (categoryNames.size() != categoryNames.stream().distinct().count()) {
+            throw validationError("Duplicate categories are not allowed");
+        }
         List<CategoryEntity> existingCategories = categoryRepository.findAllByNameIn(categoryNames);
-
         List<String> missingCategories = categoryNames.stream()
                 .filter(name -> existingCategories.stream().noneMatch(c -> c.getName().equals(name)))
                 .toList();
-
         if (!missingCategories.isEmpty()) {
             throw BaseException.exceptionBuilder()
                     .code(ErrorCode.CATEGORIES_NOT_FOUND)
