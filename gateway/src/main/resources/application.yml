@@ -11,6 +11,10 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: ia-service
+          uri: lb://ia-service
+          predicates:
+            - Path=/api/public/basic/**, /api/private/basic/**
         - id: question-service
           uri: lb://question-service
           predicates:
