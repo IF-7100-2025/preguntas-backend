@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="basic-service" target="21" />
+      <module name="basic-service.main" target="21" />
+      <module name="basic-service.test" target="21" />
+      <module name="questions-service" target="21" />
+      <module name="questions-service.main" target="21" />
+      <module name="questions-service.test" target="21" />
+      <module name="questionservice" target="21" />
+      <module name="questionservice.main" target="21" />
+      <module name="questionservice.test" target="21" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
