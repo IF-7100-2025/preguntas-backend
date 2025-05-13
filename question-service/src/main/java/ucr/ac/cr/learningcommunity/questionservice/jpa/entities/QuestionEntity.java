@@ -3,10 +3,7 @@ package ucr.ac.cr.learningcommunity.questionservice.jpa.entities;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 
 @Entity
@@ -15,11 +12,15 @@ public class QuestionEntity {
     @Id
     @Column(name = "id", nullable = false)
     private UUID id;
+
     @Column(nullable = false)
     private String text;
 
     @Column(name = "image", columnDefinition = "BYTEA")
     private byte[] image;
+
+    @OneToMany(mappedBy = "question")
+    private List<QuizEntity> quizzes;
 
     @ManyToMany
     @JoinTable(
