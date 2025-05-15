@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -17,13 +19,18 @@ public class QuizEntity {
     @Column(name = "grade")
     private int grade;
 
-    @ManyToOne
-    @JoinColumn(name = "id", nullable = false)
-    private QuestionEntity question;
-
 /*    @ManyToOne
     @JoinColumn(name = "id_user")
-    private UserEntity user;*/
+    private UserEntity user; */
+
+    @ManyToMany
+    @JoinTable(
+            name = "quiz_question",
+            joinColumns = @JoinColumn(name = "id_quiz"),
+            inverseJoinColumns = @JoinColumn(name =  "question_id")
+    )
+
+    private Set<QuestionEntity> questions =  new HashSet<>();
 
     @Column(name = "completed")
     private LocalDateTime completed;
@@ -50,12 +57,12 @@ public class QuizEntity {
         this.grade = grade;
     }
 
-    public QuestionEntity getQuestion() {
-        return question;
+    public Set<QuestionEntity> getQuestions() {
+        return questions;
     }
 
-    public void setQuestion(QuestionEntity question) {
-        this.question = question;
+    public void setQuestions(Set<QuestionEntity> questions) {
+        this.questions = questions;
     }
 
     public LocalDateTime getCompleted() {
@@ -81,4 +88,11 @@ public class QuizEntity {
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
+
+
+
+
+
+
+
 }

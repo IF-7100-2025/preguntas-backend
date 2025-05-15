@@ -41,6 +41,7 @@ public class CreateQuestionHandlerImpl implements CreateQuestionHandler {
         processAnswerOptions(request.answerOptions(), question);
         return new Result.Success(201, "Question created successfully");
     }
+
     private void validateRequest(QuestionRequest request) {
         validateQuestionText(request.text());
         validateAnswerOptions(request.answerOptions());

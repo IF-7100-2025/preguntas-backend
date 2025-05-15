@@ -1,7 +1,6 @@
 package ucr.ac.cr.learningcommunity.questionservice.jpa.entities;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.*;
 
@@ -19,7 +18,7 @@ public class QuestionEntity {
     @Column(name = "image", columnDefinition = "BYTEA")
     private byte[] image;
 
-    @OneToMany(mappedBy = "question")
+    @ManyToMany(mappedBy = "questions")
     private List<QuizEntity> quizzes;
 
     @ManyToMany
