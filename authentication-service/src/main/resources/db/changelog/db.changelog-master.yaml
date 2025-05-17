@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Axel
+      changes:
+        - sqlFile:
+            path: 001-create-tables.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+      rollback:
+        - sqlFile:
+            path: rollback/001-drop-tables.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+
+  - changeSet:
+      id: 2
+      author: Axel
+      changes:
+        - sqlFile:
+            path: 002-insert-data.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+      rollback:
+        - sql:
+            sql: |
+              DELETE FROM user_role;
+              DELETE FROM users;
+              DELETE FROM role;
