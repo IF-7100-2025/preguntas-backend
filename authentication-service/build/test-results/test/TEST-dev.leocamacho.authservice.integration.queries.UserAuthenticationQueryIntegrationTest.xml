@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.leocamacho.authservice.integration.queries.UserAuthenticationQueryIntegrationTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-05-19T01:12:47" hostname="DESKTOP-5OLMMPJ" time="1.967">
+  <properties/>
+  <testcase name="testLoadUserByUsernameSuccessfully()" classname="dev.leocamacho.authservice.integration.queries.UserAuthenticationQueryIntegrationTest" time="1.967"/>
+  <system-out><![CDATA[
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.3)
+
+2025-05-18T19:12:28.022-06:00  INFO 1640 --- [authentication-service] [    Test worker] q.UserAuthenticationQueryIntegrationTest : Starting UserAuthenticationQueryIntegrationTest using Java 21.0.5 with PID 1640 (started by Usuario in C:\Users\Usuario\Documents\UCR_cursos\Semestre_1_2025\Ingenieria\Proyecto\preguntas-backend\authentication-service)
+2025-05-18T19:12:28.041-06:00  INFO 1640 --- [authentication-service] [    Test worker] q.UserAuthenticationQueryIntegrationTest : No active profile set, falling back to 1 default profile: "default"
+2025-05-18T19:12:28.256-06:00 DEBUG 1640 --- [authentication-service] [    Test worker] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@298e002d
+2025-05-18T19:12:32.066-06:00  INFO 1640 --- [authentication-service] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-18T19:12:32.811-06:00  INFO 1640 --- [authentication-service] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 702 ms. Found 2 JPA repository interfaces.
+2025-05-18T19:12:33.801-06:00  INFO 1640 --- [authentication-service] [    Test worker] o.s.cloud.context.scope.GenericScope     : BeanFactory id=5352ee2e-6170-3128-9bf4-4a202b6abf8a
+2025-05-18T19:12:34.656-06:00  INFO 1640 --- [authentication-service] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-05-18T19:12:35.100-06:00  INFO 1640 --- [authentication-service] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@41194707
+2025-05-18T19:12:35.106-06:00  INFO 1640 --- [authentication-service] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-05-18T19:12:35.781-06:00  INFO 1640 --- [authentication-service] [    Test worker] liquibase.database                       : Set default schema name to public
+2025-05-18T19:12:37.188-06:00  INFO 1640 --- [authentication-service] [    Test worker] liquibase.changelog                      : Reading from public.databasechangelog
+2025-05-18T19:12:37.325-06:00  INFO 1640 --- [authentication-service] [    Test worker] liquibase.ui                             : Database is up to date, no changesets to execute
+2025-05-18T19:12:37.332-06:00  INFO 1640 --- [authentication-service] [    Test worker] liquibase.changelog                      : Reading from public.databasechangelog
+2025-05-18T19:12:37.360-06:00  INFO 1640 --- [authentication-service] [    Test worker] liquibase.util                           : UPDATE SUMMARY
+2025-05-18T19:12:37.361-06:00  INFO 1640 --- [authentication-service] [    Test worker] liquibase.util                           : Run:                          0
+2025-05-18T19:12:37.362-06:00  INFO 1640 --- [authentication-service] [    Test worker] liquibase.util                           : Previously run:               2
+2025-05-18T19:12:37.366-06:00  INFO 1640 --- [authentication-service] [    Test worker] liquibase.util                           : Filtered out:                 0
+2025-05-18T19:12:37.367-06:00  INFO 1640 --- [authentication-service] [    Test worker] liquibase.util                           : -------------------------------
+2025-05-18T19:12:37.369-06:00  INFO 1640 --- [authentication-service] [    Test worker] liquibase.util                           : Total change sets:            2
+2025-05-18T19:12:37.375-06:00  INFO 1640 --- [authentication-service] [    Test worker] liquibase.util                           : Update summary generated
+2025-05-18T19:12:37.379-06:00  INFO 1640 --- [authentication-service] [    Test worker] liquibase.command                        : Command execution complete
+2025-05-18T19:12:39.600-06:00  INFO 1640 --- [authentication-service] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-18T19:12:42.747-06:00  INFO 1640 --- [authentication-service] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-18T19:12:44.208-06:00  WARN 1640 --- [authentication-service] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-18T19:12:44.640-06:00 DEBUG 1640 --- [authentication-service] [    Test worker] s.w.s.m.m.a.RequestMappingHandlerMapping : 4 mappings in 'requestMappingHandlerMapping'
+2025-05-18T19:12:44.986-06:00 DEBUG 1640 --- [authentication-service] [    Test worker] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-05-18T19:12:45.071-06:00 DEBUG 1640 --- [authentication-service] [    Test worker] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-05-18T19:12:45.235-06:00 DEBUG 1640 --- [authentication-service] [    Test worker] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-05-18T19:12:45.913-06:00  INFO 1640 --- [authentication-service] [    Test worker] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2025-05-18T19:12:46.022-06:00  WARN 1640 --- [authentication-service] [    Test worker] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2025-05-18T19:12:46.132-06:00  INFO 1640 --- [authentication-service] [    Test worker] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2025-05-18T19:12:46.209-06:00  INFO 1640 --- [authentication-service] [    Test worker] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2025-05-18T19:12:46.220-06:00  INFO 1640 --- [authentication-service] [    Test worker] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2025-05-18T19:12:46.243-06:00  INFO 1640 --- [authentication-service] [    Test worker] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2025-05-18T19:12:46.243-06:00  INFO 1640 --- [authentication-service] [    Test worker] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2025-05-18T19:12:46.243-06:00  INFO 1640 --- [authentication-service] [    Test worker] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2025-05-18T19:12:46.244-06:00  INFO 1640 --- [authentication-service] [    Test worker] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2025-05-18T19:12:46.246-06:00  INFO 1640 --- [authentication-service] [    Test worker] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2025-05-18T19:12:46.247-06:00  INFO 1640 --- [authentication-service] [    Test worker] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2025-05-18T19:12:46.248-06:00  INFO 1640 --- [authentication-service] [    Test worker] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2025-05-18T19:12:46.681-06:00 DEBUG 1640 --- [authentication-service] [    Test worker] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/
+2025-05-18T19:12:46.968-06:00 DEBUG 1640 --- [authentication-service] [    Test worker] o.s.web.client.RestTemplate              : Accept=[application/json, application/*+json]
+2025-05-18T19:12:47.097-06:00 DEBUG 1640 --- [authentication-service] [    Test worker] o.s.web.client.RestTemplate              : Response 200 OK
+2025-05-18T19:12:47.103-06:00 DEBUG 1640 --- [authentication-service] [    Test worker] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-05-18T19:12:47.198-06:00  INFO 1640 --- [authentication-service] [    Test worker] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2025-05-18T19:12:47.206-06:00  INFO 1640 --- [authentication-service] [    Test worker] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2025-05-18T19:12:47.214-06:00  INFO 1640 --- [authentication-service] [    Test worker] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2025-05-18T19:12:47.220-06:00  INFO 1640 --- [authentication-service] [    Test worker] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1747617167218 with initial instances count: 1
+2025-05-18T19:12:47.229-06:00  INFO 1640 --- [authentication-service] [    Test worker] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application AUTHENTICATION-SERVICE with eureka with status UP
+2025-05-18T19:12:47.231-06:00  INFO 1640 --- [authentication-service] [    Test worker] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1747617167231, current=UP, previous=STARTING]
+2025-05-18T19:12:47.237-06:00  INFO 1640 --- [authentication-service] [foReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTHENTICATION-SERVICE/DESKTOP-5OLMMPJ.mshome.net:authentication-service:8083: registering service...
+2025-05-18T19:12:47.250-06:00 DEBUG 1640 --- [authentication-service] [foReplicator-%d] o.s.web.client.RestTemplate              : HTTP POST http://localhost:8761/eureka/apps/AUTHENTICATION-SERVICE
+2025-05-18T19:12:47.257-06:00 DEBUG 1640 --- [authentication-service] [foReplicator-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/*+json]
+2025-05-18T19:12:47.284-06:00  INFO 1640 --- [authentication-service] [    Test worker] q.UserAuthenticationQueryIntegrationTest : Started UserAuthenticationQueryIntegrationTest in 21.81 seconds (process running for 27.128)
+2025-05-18T19:12:47.332-06:00 DEBUG 1640 --- [authentication-service] [foReplicator-%d] o.s.web.client.RestTemplate              : Writing [InstanceInfo [instanceId = DESKTOP-5OLMMPJ.mshome.net:authentication-service:8083, appName = AUTHENTICATION-SERVICE, hostName = 172.18.240.1, status = UP, ipAddr = 172.18.240.1, port = 8083, securePort = 443, dataCenterInfo = com.netflix.appinfo.MyDataCenterInfo@3d502284] as "application/json"
+2025-05-18T19:12:47.393-06:00 DEBUG 1640 --- [authentication-service] [foReplicator-%d] o.s.web.client.RestTemplate              : Response 204 NO_CONTENT
+2025-05-18T19:12:47.393-06:00  INFO 1640 --- [authentication-service] [foReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTHENTICATION-SERVICE/DESKTOP-5OLMMPJ.mshome.net:authentication-service:8083 - registration status: 204
+2025-05-18T19:12:48.495-06:00  INFO 1640 --- [authentication-service] [    Test worker] o.s.c.openfeign.FeignClientFactoryBean   : For 'basic-service' URL not provided. Will try picking an instance via load-balancing.
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

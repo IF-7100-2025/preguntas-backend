@@ -24,20 +24,15 @@ public class AuthenticationHandler {
     }
 
     private AuthenticatedUser authenticate(String username, String password) {
+        if (username == null || username.isBlank())
+            throw new BusinessException("Username not provided");
+        if (password == null || password.isBlank())
+            throw new BusinessException("Password not provided");
         var user = userAuthenticationQuery.loadUserByUsername(username);
         if (user == null)
-            throw new BusinessException("User not provided");
-        if (user.password() == null)
-            throw new BusinessException("Password not provided");
-
-        /*
-        //TODO Compara el password encriptado
-        if (!password.equals(user.password()))
-            throw new BusinessException("Invalid credentials");
-        */
+            throw new BusinessException("User not found");
         if (!passwordEncoder.matches(password, user.password()))
             throw new BusinessException("Invalid credentials");
-
         return user;
     }
 }

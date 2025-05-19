@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SessionFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">authentication-service</a> &gt; <a href="index.source.html" class="el_package">ucr.ac.cr.learningcommunity.authservice.session</a> &gt; <span class="el_source">SessionFilter.java</span></div><h1>SessionFilter.java</h1><pre class="source lang-java linenums">package ucr.ac.cr.learningcommunity.authservice.session;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+
+@Component
+<span class="fc" id="L10">public class SessionFilter implements Filter {</span>
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+<span class="nc" id="L13">        Filter.super.init(filterConfig);</span>
+<span class="nc" id="L14">    }</span>
+
+    @Override
+    public void doFilter(
+            ServletRequest servletRequest,
+            ServletResponse servletResponse,
+            FilterChain filterChain
+    ) throws IOException, ServletException {
+<span class="nc" id="L22">        HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;</span>
+<span class="nc" id="L23">        SessionContextHolder.setSession(Session.newBuilder()</span>
+<span class="nc" id="L24">                .withId(httpRequest.getHeader(&quot;id&quot;))</span>
+<span class="nc" id="L25">                .withCorrelationId(httpRequest.getHeader(&quot;correlationId&quot;))</span>
+<span class="nc" id="L26">                .withEmail(httpRequest.getHeader(&quot;email&quot;))</span>
+<span class="nc" id="L27">                .withRoles(httpRequest.getHeader(&quot;roles&quot;))</span>
+<span class="nc" id="L28">                .build());</span>
+<span class="nc" id="L29">        filterChain.doFilter(servletRequest, servletResponse);</span>
+<span class="nc" id="L30">        SessionContextHolder.clearSession();</span>
+<span class="nc" id="L31">    }</span>
+
+    @Override
+    public void destroy() {
+<span class="nc" id="L35">        Filter.super.destroy();</span>
+<span class="nc" id="L36">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

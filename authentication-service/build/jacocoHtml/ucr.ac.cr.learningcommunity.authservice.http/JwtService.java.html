@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">authentication-service</a> &gt; <a href="index.source.html" class="el_package">ucr.ac.cr.learningcommunity.authservice.http</a> &gt; <span class="el_source">JwtService.java</span></div><h1>JwtService.java</h1><pre class="source lang-java linenums">package ucr.ac.cr.learningcommunity.authservice.http;
+
+import ucr.ac.cr.learningcommunity.authservice.models.AuthenticatedUser;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import java.util.Date;
+import java.util.Map;
+import java.util.function.Function;
+
+@Component
+<span class="fc" id="L17">public class JwtService {</span>
+
+    private SecretKey key;
+
+    public static final long JWT_TOKEN_VALIDITY = 120 * 60 * 60;
+
+    @Value(&quot;${jwt.secret}&quot;)
+    private String secret;
+
+    @PostConstruct
+    public void init() {
+<span class="fc" id="L28">        this.key = Keys.hmacShaKeyFor(secret.getBytes());</span>
+<span class="fc" id="L29">    }</span>
+
+    public String getUsernameFromToken(String token) {
+<span class="nc" id="L32">        return getClaimFromToken(token, Claims::getSubject);</span>
+    }
+
+    public Date getExpirationDateFromToken(String token) {
+<span class="nc" id="L36">        return getClaimFromToken(token, Claims::getExpiration);</span>
+    }
+
+    public &lt;T&gt; T getClaimFromToken(String token, Function&lt;Claims, T&gt; claimsResolver) {
+<span class="nc" id="L40">        final Claims claims = getAllClaimsFromToken(token);</span>
+<span class="nc" id="L41">        return claimsResolver.apply(claims);</span>
+    }
+
+    public Claims getAllClaimsFromToken(String token) {
+<span class="nc" id="L45">        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();</span>
+    }
+
+    public Boolean isTokenExpired(String token) {
+<span class="nc" id="L49">        final Date expiration = getExpirationDateFromToken(token);</span>
+<span class="nc" id="L50">        return expiration.before(new Date());</span>
+    }
+
+    public String generateToken(AuthenticatedUser user) {
+<span class="nc" id="L54">        Map&lt;String, Object&gt; claims = user.toMap();</span>
+<span class="nc" id="L55">        return doGenerateToken(claims, user.username());</span>
+    }
+
+    private String doGenerateToken(Map&lt;String, Object&gt; claims, String subject) {
+
+<span class="nc" id="L60">        return Jwts.builder().claims(claims).subject(subject)</span>
+<span class="nc" id="L61">                .issuedAt(new Date(System.currentTimeMillis()))</span>
+<span class="nc" id="L62">                .expiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))</span>
+<span class="nc" id="L63">                .signWith(key, Jwts.SIG.HS512).compact();</span>
+    }
+
+    public Boolean isValidToken(String token) {
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (token != null) {</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">            return !isTokenExpired(token);</span>
+<span class="nc" id="L69">        } else return false;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
