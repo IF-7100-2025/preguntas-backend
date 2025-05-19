@@ -5,7 +5,7 @@ public class InvalidInputException extends RuntimeException {
     private final String field;
 
     public InvalidInputException(String field) {
-        super("Invalid Field %s".formatted(field));
+        super("Invalid field %s".formatted(field));
         this.field = field;
     }
 

@@ -1,6 +1,5 @@
 package ucr.ac.cr.learningcommunity.authservice.handlers.queries;
 
-
 import ucr.ac.cr.learningcommunity.authservice.jpa.entities.User;
 import ucr.ac.cr.learningcommunity.authservice.jpa.repositories.UserRepository;
 import ucr.ac.cr.learningcommunity.authservice.models.AuthenticatedUser;
@@ -19,7 +18,6 @@ public class UserAuthenticationQuery {
 
     public AuthenticatedUser loadUserByUsername(String username) {
         Optional<User> user = repository.findByUsername(username);
-
         if (user.isPresent()) {
             return new AuthenticatedUser(
                     user.get().getId(),
