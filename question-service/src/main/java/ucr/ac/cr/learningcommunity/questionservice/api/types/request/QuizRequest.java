@@ -4,6 +4,6 @@ import java.util.List;
 
 public record QuizRequest(
         List<String> categories,
-        int numberOfQuestions
+        int totalQuestions
 ) {
 }

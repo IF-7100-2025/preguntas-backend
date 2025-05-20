@@ -39,66 +39,13 @@ databaseChangeLog:
       rollback:
         - sql:
             DELETE FROM categories;
-
-
-
   - changeSet:
       id: 4
       author: luis
       changes:
-        - createTable:
-            tableName: quiz
-            columns:
-              - column:
-                  name: id_quiz
-                  type: UUID
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: grade
-                  type: INTEGER
-              - column:
-                  name: completed
-                  type: TIMESTAMP
-              - column:
-                  name: status
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: end_time
-                  type: TIMESTAMP
+        - sqlFile:
+            path: 003-create_quiz_tables.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
 
-
-  - changeSet:
-      id: 5
-      author: luis
-      changes:
-        - createTable:
-            tableName: quiz_question
-            columns:
-              - column:
-                  name: id_quiz
-                  type: UUID
-              - column:
-                  name: question_id
-                  type: UUID
-        - addPrimaryKey:
-            tableName: quiz_question
-            columnNames: id_quiz, question_id
-            constraintName: pk_quiz_question
-        - addForeignKeyConstraint:
-            baseTableName: quiz_question
-            baseColumnNames: id_quiz
-            referencedTableName: quiz
-            referencedColumnNames: id_quiz
-            onDelete: CASCADE
-            constraintName: fk_quiz_question_quiz
-        - addForeignKeyConstraint:
-            baseTableName: quiz_question
-            baseColumnNames: question_id
-            referencedTableName: question
-            referencedColumnNames: id
-            onDelete: CASCADE
-            constraintName: fk_quiz_question_question

@@ -77,6 +77,14 @@ public class QuestionEntity {
         this.createdAt = createdAt;
     }
 
+    public List<QuizEntity> getQuizzes() {
+        return quizzes;
+    }
+
+    public void setQuizzes(List<QuizEntity> quizzes) {
+        this.quizzes = quizzes;
+    }
+
     public String getExplanation() {
         return explanation;
     }

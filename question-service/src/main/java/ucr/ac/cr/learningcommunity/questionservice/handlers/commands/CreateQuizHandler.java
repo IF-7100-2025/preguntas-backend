@@ -1,6 +1,7 @@
 package ucr.ac.cr.learningcommunity.questionservice.handlers.commands;
 
 import org.apache.hc.core5.reactor.Command;
+import ucr.ac.cr.learningcommunity.questionservice.api.types.request.QuizRequest;
 
 public interface CreateQuizHandler {
 
@@ -10,5 +11,5 @@ public interface CreateQuizHandler {
         record InternalError(int status, String msg) implements Result{}
 
     }
-    Result createQuiz(Command command);
+Result createQuiz(QuizRequest command);
 }

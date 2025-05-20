@@ -19,10 +19,6 @@ public class QuizEntity {
     @Column(name = "grade")
     private int grade;
 
-/*    @ManyToOne
-    @JoinColumn(name = "id_user")
-    private UserEntity user; */
-
     @ManyToMany
     @JoinTable(
             name = "quiz_question",
@@ -37,6 +33,10 @@ public class QuizEntity {
 
     @Column(name = "status", nullable = false)
     private String status;
+
+    @Column(name = "start_time", nullable = false)
+    private LocalDateTime startTime;
+
 
     @Column(name = "end_time")
     private LocalDateTime endTime;
@@ -81,6 +81,14 @@ public class QuizEntity {
         this.status = status;
     }
 
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
     public LocalDateTime getEndTime() {
         return endTime;
     }
@@ -88,11 +96,4 @@ public class QuizEntity {
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
-
-
-
-
-
-
-
 }

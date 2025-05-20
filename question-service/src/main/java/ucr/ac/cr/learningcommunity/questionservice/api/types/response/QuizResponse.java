@@ -1,4 +1,6 @@
 package ucr.ac.cr.learningcommunity.questionservice.api.types.response;
 
-public record QuizResponse() {
+import java.util.UUID;
+
+public record QuizResponse(int status, String msg, UUID quizId) {
 }
