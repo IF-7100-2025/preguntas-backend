@@ -10,7 +10,7 @@ import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.CreateQuest
 import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.CreateQuizHandler;
 
 @RestController
-@RequestMapping("/api/quizzes")
+@RequestMapping("/api/private/quizzes")
 public class QuizController {
 
     private final CreateQuizHandler createQuizHandler;
