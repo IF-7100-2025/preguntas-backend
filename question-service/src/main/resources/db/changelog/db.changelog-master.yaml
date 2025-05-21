@@ -39,4 +39,13 @@ databaseChangeLog:
       rollback:
         - sql:
             DELETE FROM categories;
+  - changeSet:
+      id: 4
+      author: luis
+      changes:
+        - sqlFile:
+            path: 003-create_quiz_tables.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
 

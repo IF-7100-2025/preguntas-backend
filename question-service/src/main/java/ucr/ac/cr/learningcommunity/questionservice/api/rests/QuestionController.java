@@ -13,7 +13,7 @@ import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.CreateQuest
 import ucr.ac.cr.learningcommunity.questionservice.handlers.queries.GetCategorySuggestionsQuery;
 
 @RestController
-@RequestMapping("/api/questions")
+@RequestMapping("/api/private/questions")
 public class QuestionController {
 
     private final GetCategorySuggestionsQuery suggestionsHandler;
