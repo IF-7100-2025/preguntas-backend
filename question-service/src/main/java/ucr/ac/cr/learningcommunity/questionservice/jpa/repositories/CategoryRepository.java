@@ -8,4 +8,5 @@ import java.util.List;
 public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> {
     List<CategoryEntity> findAllByNameIn(List<String> names);
     boolean existsByName(String name);
+    List<CategoryEntity> findByNameContainingIgnoreCase(String name);
 }
