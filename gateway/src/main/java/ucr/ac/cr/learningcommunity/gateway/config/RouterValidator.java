@@ -18,8 +18,7 @@ public class RouterValidator {
             "/api/private/categories", List.of("COLAB", "ADMIN"),
             "/private/api/collaborator", List.of("COLAB", "ADMIN"),
             "/api/private/questions", List.of("COLAB", "ADMIN"),
-            "/api/private/quizzes", List.of("COLAB", "ADMIN"),
-            "/api/public/auth", List.of("COLAB", "ADMIN")
+            "/api/private/quizzes", List.of("COLAB", "ADMIN")
     );
 
 
