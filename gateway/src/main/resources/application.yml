@@ -14,11 +14,11 @@ spring:
         - id: ia-service
           uri: lb://ia-service
           predicates:
-            - Path=/api/public/basic/**, /api/private/basic/**
+            - Path=/api/public/ia/**, /api/private/ia/**
         - id: question-service
           uri: lb://question-service
           predicates:
-            - Path=/api/public/basic/**, /api/private/basic/**
+            - Path=/api/public/questions/**, /api/private/questions/**
         - id: authentication-service
           uri: lb://authentication-service
           predicates:
