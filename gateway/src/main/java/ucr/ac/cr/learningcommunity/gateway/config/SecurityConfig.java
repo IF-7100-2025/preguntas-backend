@@ -16,6 +16,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // 🔒 Desactiva CSRF
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers("/api/public/**").permitAll()
+                        .pathMatchers("/api/private/**").permitAll()
                         .anyExchange().authenticated()
                 )
                 .build();

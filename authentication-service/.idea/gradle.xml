@@ -11,6 +11,38 @@
           </set>
         </option>
       </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/../eureka" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/../eureka" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/../gateway" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/../gateway" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/../ia-service" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/../ia-service" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/../question-service" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/../question-service" />
+          </set>
+        </option>
+      </GradleProjectSettings>
     </option>
   </component>
 </project>
