@@ -19,7 +19,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/ia_db
     username: postgres
-    password: vacalola
+    password: password
   jpa:
     hibernate:
       ddl-auto: none

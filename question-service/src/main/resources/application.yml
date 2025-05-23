@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/questions_db
     username: postgres
-    password: vacalola
+    password: password
   jpa:
     hibernate:
       ddl-auto: none

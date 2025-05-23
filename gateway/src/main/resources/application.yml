@@ -10,19 +10,62 @@ spring:
     name: gateway-service
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:5173"
+            allowedMethods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+              - OPTIONS
+            allowedHeaders: "*"
       routes:
         - id: ia-service
           uri: lb://ia-service
           predicates:
             - Path=/api/public/ia/**, /api/private/ia/**
+          metadata:
+            cors:
+              allowedOrigins: "http://localhost:5173"
+              allowedMethods:
+                - GET
+                - POST
+                - DELETE
+                - PUT
+                - OPTIONS
+              allowedHeaders: '*'
         - id: question-service
           uri: lb://question-service
           predicates:
             - Path=/api/public/questions/**, /api/private/questions/**
+          metadata:
+            cors:
+              allowedOrigins: "http://localhost:5173"
+              allowedMethods:
+                - GET
+                - POST
+                - DELETE
+                - PUT
+                - OPTIONS
+              allowedHeaders: '*'
         - id: authentication-service
           uri: lb://authentication-service
           predicates:
             - Path=/api/public/auth/**, /api/private/auth/**
+          metadata:
+            cors:
+              allowedOrigins: "http://localhost:5173"
+              allowedMethods:
+                - GET
+                - POST
+                - DELETE
+                - PUT
+                - OPTIONS
+              allowedHeaders: '*'
 logging:
   level:
     org:
