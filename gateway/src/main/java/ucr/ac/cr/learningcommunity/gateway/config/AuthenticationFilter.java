@@ -4,7 +4,6 @@ import io.jsonwebtoken.Claims;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -64,8 +63,13 @@ public class AuthenticationFilter implements GlobalFilter {
 
     private Mono<Void> onError(ServerWebExchange ex, HttpStatus status) {
         ServerHttpResponse res = ex.getResponse();
+        res.getHeaders().add("Content-Type", "application/json");
         res.setStatusCode(status);
-        byte[] bytes = "Invalid session".getBytes(StandardCharsets.UTF_8);
+        String json = String.format(
+                "{\"error\":\"invalid session\", \"msg\":\"The session is invalid or expired\", \"status\": %d}",
+                status.value()
+        );
+        byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
         return res.writeWith(Mono.just(res.bufferFactory().wrap(bytes)));
     }
 }

@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/private/api/collaborator")
+@RequestMapping("/api/private/questions/collaborator")
 public class CollaboratorController {
     private final GetRandomCategoriesQuery getRandomCategoriesQuery;
     private final SearchCategoriesQuery searchCategoriesQuery;

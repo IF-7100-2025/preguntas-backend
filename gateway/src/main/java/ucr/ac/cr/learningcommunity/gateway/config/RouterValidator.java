@@ -15,10 +15,10 @@ public class RouterValidator {
     //Poner aquí las rutas privadas de cada endpoint y el role que admite
     private static final Map<String, List<String>> roleRequired = Map.of(
             "/api/private/ia", List.of("COLAB", "ADMIN"),
-            "/api/private/categories", List.of("COLAB", "ADMIN"),
-            "/private/api/collaborator", List.of("COLAB", "ADMIN"),
+            "/api/private/questions/categories", List.of("COLAB", "ADMIN"),
+            "/api/private/questions/collaborator", List.of("COLAB", "ADMIN"),
             "/api/private/questions", List.of("COLAB", "ADMIN"),
-            "/api/private/quizzes", List.of("COLAB", "ADMIN")
+            "/api/private/questions/quizzes", List.of("COLAB", "ADMIN")
     );
 
 
