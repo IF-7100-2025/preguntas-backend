@@ -24,3 +24,5 @@
 hs_err_pid*
 replay_pid*
 ia-service/src/main/resources/application-secret.yml
+shared-config/application-db-secrets.yml
+*/**/application-db-secrets.yml

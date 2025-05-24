@@ -45,6 +45,10 @@ public class QuestionEntity {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AnswerOptionEntity> answerOptions = new HashSet<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by", nullable = false)
+    private User createdBy;
+
     public String getText() {
         return text;
     }
@@ -124,4 +128,8 @@ public class QuestionEntity {
     public void setId(UUID id) {
         this.id = id;
     }
+
+    public User getCreatedBy() { return createdBy; }
+
+    public void setCreatedBy(User createdBy) { this.createdBy = createdBy; }
 }

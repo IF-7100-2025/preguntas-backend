@@ -1,10 +1,13 @@
 spring:
   application:
     name: authentication-service
+  config:
+    import:
+      - optional:file:./preguntas-backend/shared-config/application-db-secrets.yml
   datasource:
     url: jdbc:postgresql://localhost:5432/auth_db
     username: postgres
-    password: password
+    password: ${dataConfig.password}
   jpa:
     hibernate:
       ddl-auto: none

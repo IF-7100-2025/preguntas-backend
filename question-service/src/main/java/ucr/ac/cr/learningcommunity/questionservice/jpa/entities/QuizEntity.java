@@ -41,6 +41,10 @@ public class QuizEntity {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by", nullable = false)
+    private User createdBy;
+
     public UUID getId() {
         return id;
     }
@@ -96,4 +100,8 @@ public class QuizEntity {
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
+
+    public User getCreatedBy() {return createdBy;}
+
+    public void setCreatedBy(User createdBy) {this.createdBy = createdBy;}
 }

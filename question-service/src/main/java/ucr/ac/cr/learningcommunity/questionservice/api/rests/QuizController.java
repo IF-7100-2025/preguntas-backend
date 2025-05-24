@@ -21,8 +21,9 @@ public class QuizController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createQuiz(@RequestBody QuizRequest request) {
-        var result = createQuizHandler.createQuiz(request);
+    public ResponseEntity<?> createQuiz(@RequestBody QuizRequest request,
+                                        @RequestHeader("id") String id) {
+        var result = createQuizHandler.createQuiz(request, id);
 
         return switch (result) {
             case CreateQuizHandler.Result.Success success ->
