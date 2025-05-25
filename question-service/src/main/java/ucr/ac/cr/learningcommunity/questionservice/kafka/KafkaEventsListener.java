@@ -42,26 +42,4 @@ public class KafkaEventsListener {
                     .build();
         }
     }
-//    @KafkaListener(topics = "user-password-updated-topic", groupId = "user-sync-group")
-//    public void handleEvent2(Event<?> event) {
-//        try {
-//            if (event.getEventType() == EventType.CHANGEPASSWORD) {
-//                ResgisterUser registerUserData = (ResgisterUser) event.getData();
-//                if (userRepository.findById(registerUserData.getUserId()).isEmpty()) {
-//                    UserEntity user = new UserEntity();
-//                    user.setId(registerUserData.getUserId());
-//                    user.setUsername(registerUserData.getUsername());
-//                    user.setEmail(registerUserData.getEmail());
-//                    user.setRole(registerUserData.getRole());
-//                    user.setPassword(registerUserData.getPassword());
-//                    userRepository.save(user);
-//                }
-//            }
-//        } catch (Exception e) {
-//            throw BaseException.exceptionBuilder()
-//                    .code(ErrorCode.ERROR_NOT_IDENTIFIED)
-//                    .message(ErrorCode.ERROR_NOT_IDENTIFIED.getDefaultMessage())
-//                    .build();
-//        }
-//    }
 }
