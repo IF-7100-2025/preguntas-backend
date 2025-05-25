@@ -1,4 +1,4 @@
-package ucr.ac.cr.learningcommunity.questionservice.config;
+package ucr.ac.cr.learningcommunity.authservice.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -9,7 +9,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import ucr.ac.cr.learningcommunity.questionservice.events.Event;
+import ucr.ac.cr.learningcommunity.authservice.events.Event;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
         JsonDeserializer<Event<?>> deserializer = new JsonDeserializer<>(Event.class);
-        props.put(JsonDeserializer.TRUSTED_PACKAGES, "ucr.ac.cr.learningcommunity.questionservice.events.Event");
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "ucr.ac.cr.learningcommunity.authservice.events.Event");
         return new DefaultKafkaConsumerFactory<>(
                 props,
                 new StringDeserializer(),

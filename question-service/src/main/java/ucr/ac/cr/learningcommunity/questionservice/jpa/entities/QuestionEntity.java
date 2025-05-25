@@ -47,7 +47,7 @@ public class QuestionEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)
-    private User createdBy;
+    private UserEntity createdBy;
 
     public String getText() {
         return text;
@@ -129,7 +129,7 @@ public class QuestionEntity {
         this.id = id;
     }
 
-    public User getCreatedBy() { return createdBy; }
+    public UserEntity getCreatedBy() { return createdBy; }
 
-    public void setCreatedBy(User createdBy) { this.createdBy = createdBy; }
+    public void setCreatedBy(UserEntity createdBy) { this.createdBy = createdBy; }
 }

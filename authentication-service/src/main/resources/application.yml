@@ -6,6 +6,22 @@ spring:
       - optional:file:./preguntas-backend/shared-config/application-db-secrets.yml
   kafka:
     bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: ucr.ac.cr.learningcommunity.authservice.events.Event
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: ucr.ac.cr.learningcommunity.authservice.events.Event
   datasource:
     url: jdbc:postgresql://localhost:5432/auth_db
     username: postgres

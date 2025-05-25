@@ -14,7 +14,7 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")
         })
-public class User {
+public class UserEntity {
 
     @Id
     @Column(name = "id_user", nullable = false, length = 36)
@@ -49,9 +49,9 @@ public class User {
     // Relación con preguntas creadas
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<QuestionEntity> createdQuestions = new HashSet<>();
-    public User() {}
+    public UserEntity() {}
 
-    public User(String id, String username, String email, String password, String role) {
+    public UserEntity(String id, String username, String email, String password, String role) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -148,7 +148,7 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
+        UserEntity user = (UserEntity) o;
         return id.equals(user.id);
     }
 

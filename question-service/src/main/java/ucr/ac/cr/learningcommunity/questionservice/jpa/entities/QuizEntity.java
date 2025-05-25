@@ -1,7 +1,6 @@
 package ucr.ac.cr.learningcommunity.questionservice.jpa.entities;
 
 import jakarta.persistence.*;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -43,7 +42,7 @@ public class QuizEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)
-    private User createdBy;
+    private UserEntity createdBy;
 
     public UUID getId() {
         return id;
@@ -101,7 +100,7 @@ public class QuizEntity {
         this.endTime = endTime;
     }
 
-    public User getCreatedBy() {return createdBy;}
+    public UserEntity getCreatedBy() {return createdBy;}
 
-    public void setCreatedBy(User createdBy) {this.createdBy = createdBy;}
+    public void setCreatedBy(UserEntity createdBy) {this.createdBy = createdBy;}
 }

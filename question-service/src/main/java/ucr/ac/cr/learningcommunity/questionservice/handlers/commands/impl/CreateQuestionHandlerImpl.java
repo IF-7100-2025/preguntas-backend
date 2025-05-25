@@ -7,7 +7,7 @@ import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.CreateQuest
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.AnswerOptionEntity;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.CategoryEntity;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.QuestionEntity;
-import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.User;
+import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.UserEntity;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.AnswerOptionRepository;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.CategoryRepository;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.QuestionRepository;
@@ -17,9 +17,7 @@ import ucr.ac.cr.learningcommunity.questionservice.models.ErrorCode;
 
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class CreateQuestionHandlerImpl implements CreateQuestionHandler {
@@ -44,7 +42,7 @@ public class CreateQuestionHandlerImpl implements CreateQuestionHandler {
     public Result createQuestion(QuestionRequest request, String userId) {
         validateRequest(request, userId);
         List<CategoryEntity> categories = processCategories(request.categories());
-        User user = userRepository.findById(userId)
+        UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> validationError("User not found"));
         QuestionEntity question = createQuestionEntity(request, categories, user);
         processAnswerOptions(request.answerOptions(), question);
@@ -133,7 +131,7 @@ public class CreateQuestionHandlerImpl implements CreateQuestionHandler {
         return existingCategories;
     }
 
-    private QuestionEntity createQuestionEntity(QuestionRequest request, List<CategoryEntity> categories, User user) {
+    private QuestionEntity createQuestionEntity(QuestionRequest request, List<CategoryEntity> categories, UserEntity user) {
         QuestionEntity question = new QuestionEntity();
         question.setText(request.text());
         question.setId(UUID.randomUUID());

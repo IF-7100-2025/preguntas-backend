@@ -1,14 +1,12 @@
 package ucr.ac.cr.learningcommunity.questionservice.handlers.commands.impl;
 
-import org.apache.hc.core5.reactor.Command;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ucr.ac.cr.learningcommunity.questionservice.api.types.request.QuestionRequest;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.request.QuizRequest;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.CreateQuizHandler;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.QuestionEntity;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.QuizEntity;
-import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.User;
+import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.UserEntity;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.*;
 import ucr.ac.cr.learningcommunity.questionservice.models.BaseException;
 import ucr.ac.cr.learningcommunity.questionservice.models.ErrorCode;
@@ -41,7 +39,7 @@ public class CreateQuizHandlerImpl implements CreateQuizHandler {
     @Override
     public Result createQuiz(QuizRequest request, String userId) {
         validateRequest(request, userId);
-        User user = userRepository.findById(userId)
+        UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> validationError("User not found"));
         QuizEntity quiz = createQuizEntity(request, user);
         quizRepository.save(quiz);
@@ -96,7 +94,7 @@ public class CreateQuizHandlerImpl implements CreateQuizHandler {
         return new HashSet<>(questions.subList(0, totalQuestions));
     }
 
-    private QuizEntity createQuizEntity(QuizRequest request, User user) {
+    private QuizEntity createQuizEntity(QuizRequest request, UserEntity user) {
 
         QuizEntity quiz = new QuizEntity();
         quiz.setId(UUID.randomUUID());

@@ -1,7 +1,10 @@
 package ucr.ac.cr.learningcommunity.authservice.handlers.commands;
 
 import org.springframework.kafka.core.KafkaTemplate;
-import ucr.ac.cr.learningcommunity.authservice.events.UserRegisteredEvent;
+import ucr.ac.cr.learningcommunity.authservice.events.Event;
+import ucr.ac.cr.learningcommunity.authservice.events.EventType;
+import ucr.ac.cr.learningcommunity.authservice.events.RegisterUserEvent;
+import ucr.ac.cr.learningcommunity.authservice.events.actions.ResgisterUser;
 import ucr.ac.cr.learningcommunity.authservice.exceptions.BusinessException;
 import ucr.ac.cr.learningcommunity.authservice.exceptions.InvalidInputException;
 import ucr.ac.cr.learningcommunity.authservice.jpa.entities.Role;
@@ -23,7 +26,7 @@ public class RegisterUserHandler {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
+    private KafkaTemplate<String, Event<?>> kafkaTemplate;
 
     public record Command(String email, String username, String password) {
     }
@@ -47,14 +50,17 @@ public class RegisterUserHandler {
 
     private void publishUserRegisteredEvent(User user) {
         String userRole = user.getRoles().stream().findFirst().map(Role::getName).orElse("COLAB");
-        UserRegisteredEvent event = new UserRegisteredEvent(
+        ResgisterUser registerUserData  = new ResgisterUser(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
                 userRole,
                 user.getPassword()
         );
-        kafkaTemplate.send("user-registered-topic", event);
+        RegisterUserEvent event = new RegisterUserEvent();
+        event.setEventType(EventType.NEWUSER);
+        event.setData(registerUserData);
+        kafkaTemplate.send("user-registered-topic2", event);
     }
     private void validateExistingUser(String username, String email) {
         if (repository.findByUsername(username).isPresent() || repository.findByEmail(email).isPresent()) {
