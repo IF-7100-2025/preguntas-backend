@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.4.5"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("jacoco")
 }
 
 group = "ucr.ac.cr.learningcommunity"
@@ -31,8 +32,13 @@ dependencies {
 	implementation("org.liquibase:liquibase-core")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	runtimeOnly("org.postgresql:postgresql")
+	testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+	testImplementation("org.mockito:mockito-core:5.12.0")
+	testImplementation("org.mockito:mockito-junit-jupiter:5.12.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("io.cucumber:cucumber-java:7.14.0")
+	testImplementation("io.cucumber:cucumber-spring:7.14.0")
+	testImplementation("io.cucumber:cucumber-junit-platform-engine:7.14.0")
 }
 
 
@@ -45,4 +51,25 @@ dependencyManagement {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	jvmArgs = listOf("-XX:+EnableDynamicAgentLoading")
+
+	tasks.test {
+		finalizedBy(tasks.jacocoTestReport)
+	}
+	tasks.jacocoTestReport {
+		dependsOn(tasks.test)
+	}
+}
+
+jacoco {
+	toolVersion = "0.8.13"
+	reportsDirectory = layout.buildDirectory.dir("customJacocoReportDir")
+}
+
+tasks.jacocoTestReport {
+	reports {
+		xml.required = false
+		csv.required = false
+		html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+	}
 }
