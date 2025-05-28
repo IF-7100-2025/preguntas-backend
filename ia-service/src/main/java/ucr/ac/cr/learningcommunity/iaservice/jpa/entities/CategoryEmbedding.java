@@ -48,5 +48,5 @@ public class CategoryEmbedding {
         this.category = category;
         this.embedding = embedding;
     }
-    protected CategoryEmbedding() {}
+    public CategoryEmbedding() {}
 }
