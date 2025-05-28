@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: brandon
+      changes:
+        - sqlFile:
+            path: 001-create-tables.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+      rollback:
+        - sqlFile:
+            path: rollback/001-drop-tables.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+
+  - changeSet:
+      id: 2
+      author: brandon
+      changes:
+        - sqlFile:
+            path: 001-insert-categories.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+      rollback:
+        - sql:
+            DELETE FROM categories;
+  - changeSet:
+      id: 3
+      author: brandon
+      changes:
+        - sqlFile:
+            path: 002-insert-more-categories.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+      rollback:
+        - sql:
+            DELETE FROM categories;

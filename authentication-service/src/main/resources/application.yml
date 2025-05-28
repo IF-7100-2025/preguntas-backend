@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: authentication-service
+  config:
+    import:
+      - optional:file:./preguntas-backend/shared-config/application-db-secrets.yml
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: ucr.ac.cr.learningcommunity.authservice.events.Event
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: ucr.ac.cr.learningcommunity.authservice.events.Event
+  datasource:
+    url: jdbc:postgresql://localhost:5432/auth_db
+    username: postgres
+    password: ${dataConfig.password}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: ${SERVER_PORT:8084}
+eureka:
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    preferIpAddress: true
+jwt:
+  secret: KXiUPknkoVDCHdNrrYnxmA5oQLbv+LE7eHG8vkk71fjEPq0lmlZKwBhUVLUqKSmGam8P4kWxXKTGCDRgpZ5BMA==
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.hibernate: ERROR
