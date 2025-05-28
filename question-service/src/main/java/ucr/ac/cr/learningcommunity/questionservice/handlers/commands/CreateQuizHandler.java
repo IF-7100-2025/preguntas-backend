@@ -11,5 +11,5 @@ public interface CreateQuizHandler {
         record InternalError(int status, String msg) implements Result{}
 
     }
-Result createQuiz(QuizRequest command);
+Result createQuiz(QuizRequest command, String userId);
 }

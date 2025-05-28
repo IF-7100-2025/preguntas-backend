@@ -48,4 +48,51 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
+  - changeSet:
+      id: 5
+      author: brandon
+      changes:
+        - sqlFile:
+            path: 004-create-user-table.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
 
+  - changeSet:
+      id: 6
+      author: brandon
+      changes:
+        - sqlFile:
+            path: 004-alter-user-relations-questions-quiz.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+  - changeSet:
+      id: 7
+      author: brandon
+      changes:
+        - sqlFile:
+            path: 004-index-user.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+
+  - changeSet:
+      id: 8
+      author: brandon
+      changes:
+        - sqlFile:
+            path: 004-create-function-update.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+
+  - changeSet:
+      id: 9
+      author: brandon
+      changes:
+        - sqlFile:
+            path: 004-create-trigger-update.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true

@@ -3,7 +3,10 @@ spring:
     name: ia-service
 
   config:
-    import: classpath:/application-secret.yml
+    import:
+      - classpath:/application-secret.yml
+      - optional:file:./preguntas-backend/shared-config/application-db-secrets.yml
+
 
   ai:
     openai:
@@ -19,7 +22,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/ia_db
     username: postgres
-    password: password
+    password: ${dataConfig.password}
   jpa:
     hibernate:
       ddl-auto: none

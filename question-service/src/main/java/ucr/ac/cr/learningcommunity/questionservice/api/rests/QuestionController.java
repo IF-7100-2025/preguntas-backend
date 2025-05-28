@@ -2,10 +2,7 @@ package ucr.ac.cr.learningcommunity.questionservice.api.rests;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.request.CategorizeSuggestionRequest;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.request.QuestionRequest;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.response.ApiResponse;
@@ -38,8 +35,9 @@ public class QuestionController {
         };
     }
     @PostMapping
-    public ResponseEntity<?> createQuestion(@RequestBody QuestionRequest request) {
-        var result = createQuestionHandler.createQuestion(request);
+    public ResponseEntity<?> createQuestion(@RequestBody QuestionRequest request,
+                                            @RequestHeader("id") String id) {
+        var result = createQuestionHandler.createQuestion(request, id);
        return switch (result) {
             case CreateQuestionHandler.Result.Success success ->  ResponseEntity.ok().body(new ApiResponse(success.status(), success.msg()));
             case CreateQuestionHandler.Result.Unauthorized unauthorized ->  ResponseEntity.status(unauthorized.status()).body(new ApiResponse(unauthorized.status(), unauthorized.msg()));

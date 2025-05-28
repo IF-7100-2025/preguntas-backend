@@ -13,5 +13,5 @@ public interface CreateQuestionHandler {
         record InternalError(int status, String msg) implements Result {}
     }
 
-    Result createQuestion(QuestionRequest command);
+    Result createQuestion(QuestionRequest command, String id);
 }
