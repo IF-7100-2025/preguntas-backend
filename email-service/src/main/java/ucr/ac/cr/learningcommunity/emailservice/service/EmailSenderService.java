@@ -9,7 +9,6 @@ import ucr.ac.cr.learningcommunity.emailservice.template.EmailTemplateService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
-
 @Service
 public class EmailSenderService {
 
@@ -24,17 +23,33 @@ public class EmailSenderService {
         this.emailTemplateService = emailTemplateService;
     }
 
+    public void sendVerificationEmail(String email, String username, String code) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setFrom(fromEmail);
+            helper.setTo(email);
+            helper.setSubject("Verificá tu cuenta en Conti Learning Community");
+            helper.setText(emailTemplateService.createVerificationTemplate(username, code), true);
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send verification email", e);
+        }
+    }
+
+
     public void sendWelcomeEmail(String email, String username) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setFrom(fromEmail);
             helper.setTo(email);
-            helper.setSubject("¡Bienvenido a Conti Learning Community!");
+            helper.setSubject("¡Bienvenido oficialmente a Conti Learning Community!");
             helper.setText(emailTemplateService.createWelcomeTemplate(username), true);
             mailSender.send(message);
         } catch (MessagingException e) {
-            throw new RuntimeException("Failed to send email", e);
+            throw new RuntimeException("Failed to send welcome email", e);
         }
     }
+
 }

@@ -53,4 +53,6 @@ public class KafkaProducerConfig {
     public NewTopic clientTopic() {
         return new NewTopic("user-registered-topic2", 1, (short) 1);
     }
+    @Bean
+    public NewTopic loginTopic() { return new NewTopic("user-login-success-topic2", 1, (short) 1); }
 }

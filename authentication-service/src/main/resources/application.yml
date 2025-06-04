@@ -3,7 +3,7 @@ spring:
     name: authentication-service
   config:
     import:
-      - optional:file:./preguntas-backend/shared-config/application-db-secrets.yml
+      - optional:file:./shared-config/application-db-secrets.yml
   kafka:
     bootstrap-servers: localhost:9092
     producer:
@@ -49,3 +49,7 @@ logging:
   level:
     org.springframework.web: DEBUG
     org.hibernate: ERROR
+
+redis:
+  host: redis
+  port: 6379
