@@ -30,3 +30,11 @@ databaseChangeLog:
               DELETE FROM user_role;
               DELETE FROM users;
               DELETE FROM role;
+
+  - changeSet:
+      id: 3
+      author: Irola
+      changes:
+        - sqlFile:
+            path: 003-add-is_verified-column.sql
+            relativeToChangelogFile: true

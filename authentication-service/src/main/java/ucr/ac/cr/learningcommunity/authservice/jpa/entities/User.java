@@ -23,6 +23,9 @@ public class User {
     @Column(nullable = false, length = 100)
     private String password;
 
+    @Column(name = "is_verified", nullable = false)
+    private boolean isVerified = false;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
@@ -81,4 +84,11 @@ public class User {
                 .toList(); // Para Java 8: usar .collect(Collectors.toList())
     }
 
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
 }

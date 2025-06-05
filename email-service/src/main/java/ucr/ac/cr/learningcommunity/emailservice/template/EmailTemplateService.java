@@ -66,6 +66,23 @@ public class EmailTemplateService {
                 </div>
             </body>
         </html>
-    """, name);
+        """, name);
     }
+
+    public String createVerificationTemplate(String name, String code) {
+        return String.format("""
+        <html>
+            <body style="font-family: Arial, sans-serif; padding: 20px;">
+                <h2>¡Hola %s!</h2>
+                <p>Gracias por registrarte en Conti Learning Community.</p>
+                <p>Tu código de verificación es:</p>
+                <p style="font-size: 24px; color: #006699;"><strong>%s</strong></p>
+                <p>Ingresalo en la aplicación para activar tu cuenta.</p>
+                <br>
+                <p style="font-size: 12px; color: gray;">Este correo fue generado automáticamente. No respondas a este mensaje.</p>
+            </body>
+        </html>
+    """, name, code);
+    }
+
 }

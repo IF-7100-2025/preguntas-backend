@@ -33,7 +33,7 @@ dependencies {
     implementation("org.springframework.security:spring-security-crypto:6.2.2")
     implementation("io.jsonwebtoken:jjwt:0.12.5")
     implementation("javax.xml.bind:jaxb-api:2.3.0")
-
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
     testImplementation("org.mockito:mockito-core:5.12.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.12.0")

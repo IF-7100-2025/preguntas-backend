@@ -14,11 +14,13 @@ import ucr.ac.cr.learningcommunity.authservice.jpa.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
+import ucr.ac.cr.learningcommunity.authservice.redis.RedisService;
 import java.util.Set;
 
 @Component
 public class RegisterUserHandler {
+    @Autowired
+    private RedisService redisService;
     @Autowired
     private UserRepository repository;
     @Autowired
@@ -50,18 +52,29 @@ public class RegisterUserHandler {
 
     private void publishUserRegisteredEvent(User user) {
         String userRole = user.getRoles().stream().findFirst().map(Role::getName).orElse("COLAB");
-        ResgisterUser registerUserData  = new ResgisterUser(
-                user.getId(),
+
+
+        String code = String.format("%06d", new java.util.Random().nextInt(999999));
+
+        redisService.saveVerificationCode(user.getEmail(), code, 10);
+
+
+        ResgisterUser registerUserData = new ResgisterUser(
+                String.valueOf(user.getId()),
                 user.getUsername(),
                 user.getEmail(),
                 userRole,
-                user.getPassword()
+                user.getPassword(),
+                code
         );
+
         RegisterUserEvent event = new RegisterUserEvent();
         event.setEventType(EventType.NEWUSER);
         event.setData(registerUserData);
+
         kafkaTemplate.send("user-registered-topic2", event);
     }
+
     private void validateExistingUser(String username, String email) {
         if (repository.findByUsername(username).isPresent() || repository.findByEmail(email).isPresent()) {
             throw new BusinessException("User already exists");

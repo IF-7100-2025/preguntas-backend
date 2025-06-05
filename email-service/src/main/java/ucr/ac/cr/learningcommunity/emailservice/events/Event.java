@@ -10,13 +10,15 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         property = "eventType"
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = RegisterUserEvent.class, name = "NEWUSER")
-        , @JsonSubTypes.Type(value = ChangePasswordEvent.class, name = "CHANGEPASSWORD")
-        , @JsonSubTypes.Type(value = UpdateProfileEvent.class, name = "CHANGEPROFILE")
+        @JsonSubTypes.Type(value = RegisterUserEvent.class, name = "NEWUSER"),
+        @JsonSubTypes.Type(value = ChangePasswordEvent.class, name = "CHANGEPASSWORD"),
+        @JsonSubTypes.Type(value = UpdateProfileEvent.class, name = "CHANGEPROFILE"),
+        @JsonSubTypes.Type(value = LoginSuccessEvent.class, name = "LOGIN_SUCCESS")
 })
 public abstract class Event<T> {
     private EventType eventType;
     private T data;
+
     public EventType getEventType() {
         return eventType;
     }
