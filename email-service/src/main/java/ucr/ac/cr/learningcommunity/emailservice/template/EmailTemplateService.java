@@ -35,12 +35,6 @@ public class EmailTemplateService {
                     <div class="content">
                         <p>Hola <strong>%s</strong>,</p>
                         <p>¡Qué gusto tenerte con nosotros! En Conti Learning Community hemos creado un espacio donde el conocimiento se comparte y crece colaborativamente.</p>
-
-                        <p style="text-align: center; font-size: 18px; margin: 30px 0;">
-                            <strong>Tu código de verificación es:</strong><br>
-                            <span style="font-size: 28px; letter-spacing: 2px; color: #006699;">%s</span>
-                        </p>
-
                         <div class="feature">
                             <div class="feature-icon">💡</div>
                             <div class="feature-content">

@@ -25,7 +25,7 @@ public class AuthenticationHandler {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // ✅ Usamos el KafkaTemplate genérico
+    //  Usamos el KafkaTemplate genérico
     @Autowired
     private KafkaTemplate<String, Event<?>> kafkaTemplate;
 
@@ -44,7 +44,7 @@ public class AuthenticationHandler {
         event.setData(loginData);
 
         // Enviar evento a Kafka
-        kafkaTemplate.send("user-login-success-topic2", event);
+        kafkaTemplate.send("user-login-success-topic3", event);
 
         // Devolver token JWT
         return jwtService.generateToken(authenticated);

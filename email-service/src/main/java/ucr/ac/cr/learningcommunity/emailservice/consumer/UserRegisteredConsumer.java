@@ -15,7 +15,7 @@ public class UserRegisteredConsumer {
         this.emailService = emailService;
     }
 
-    @KafkaListener(topics = "user-registered-topic2")
+    @KafkaListener(topics = "user-registered-topic2",groupId = "user-registered-group")
     public void handleUserRegistration(RegisterUserEvent event) {
         ResgisterUser user = (ResgisterUser) event.getData();
 

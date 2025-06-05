@@ -15,7 +15,7 @@ public class LoginSuccessConsumer {
         this.emailSenderService = emailSenderService;
     }
 
-    @KafkaListener(topics = "user-login-success-topic2")
+    @KafkaListener(topics = "user-login-success-topic3",groupId = "user-login-success-group")
     public void handleLoginSuccess(LoginSuccessEvent event) {
         LoginSuccess loginData = (LoginSuccess)  event.getData();
         emailSenderService.sendWelcomeEmail(
