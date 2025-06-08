@@ -5,8 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.request.QuizRequest;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.response.ApiResponse;
-import ucr.ac.cr.learningcommunity.questionservice.api.types.response.QuizResponse;
-import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.CreateQuestionHandler;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.CreateQuizHandler;
 
 @RestController
