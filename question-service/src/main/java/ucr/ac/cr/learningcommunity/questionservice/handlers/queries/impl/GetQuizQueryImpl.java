@@ -2,7 +2,6 @@ package ucr.ac.cr.learningcommunity.questionservice.handlers.queries.impl;
 
 import org.springframework.stereotype.Service;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.response.QuizResponse;
-import ucr.ac.cr.learningcommunity.questionservice.handlers.queries.GetCategoriesQuery;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.queries.GetQuizQuery;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.AnswerOptionEntity;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.CategoryEntity;
@@ -46,16 +45,15 @@ public class GetQuizQueryImpl implements GetQuizQuery {
 
                     String username = userEntity.getUsername();
 
-
                     List<QuizResponse.Category> categories = new ArrayList<>();
+
                     for (CategoryEntity category : question.getCategories()) {
-                        categories.add(new QuizResponse.Category(category.getName())); // Mapeamos cada categoría
+                        categories.add(new QuizResponse.Category(category.getName()));
                     }
                     return new QuizResponse.Question(
                             username,
                             question.getText(),
                             question.getImage(),
-                            question.getExplanation(),
                             question.getLikes(),
                             question.getDislikes(),
                             categories,
@@ -72,9 +70,7 @@ public class GetQuizQueryImpl implements GetQuizQuery {
 
     private List<QuizResponse.AnswerOption> mapAnswerOptions(Set<AnswerOptionEntity> answerOptions) {
         return new ArrayList<>(answerOptions).stream()
-                .map(answerOption -> new QuizResponse.AnswerOption(
-                        answerOption.getText(),
-                        answerOption.isCorrect()
+                .map(answerOption -> new QuizResponse.AnswerOption(answerOption.getText()
                 ))
                 .toList();
     }
