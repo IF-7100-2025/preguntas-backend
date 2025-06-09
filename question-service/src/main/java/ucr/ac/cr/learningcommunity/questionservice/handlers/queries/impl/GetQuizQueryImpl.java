@@ -23,18 +23,14 @@ public class GetQuizQueryImpl implements GetQuizQuery {
 
     @Override
     public Result query(UUID id) {
-        // Comprobar si el quiz existe
+
         if (quizRepository.findById(id).isPresent()) {
-            // Si existe, obtener el quiz
             QuizEntity quiz = quizRepository.findById(id).get();
 
-            // Mapeamos el quiz a un QuizResponse
             QuizResponse response = mapToQuizResponse(quiz);
 
-            // Devolver el resultado exitoso con el quiz
             return new Result.Success(response);
         } else {
-            // Si no se encuentra el quiz, retornar error
             return new Result.Error(
                     ErrorCode.QUIZ_NOT_FOUND.getHttpStatus(),
                     ErrorCode.QUIZ_NOT_FOUND.getDefaultMessage()
@@ -43,7 +39,8 @@ public class GetQuizQueryImpl implements GetQuizQuery {
     }
 
     private QuizResponse mapToQuizResponse(QuizEntity quiz) {
-        List<QuizResponse.Question> questions = quiz.getQuestions().stream()
+        List<QuizResponse.Question>
+                questions = quiz.getQuestions().stream()
                 .map(question -> {
                     UserEntity userEntity = question.getCreatedBy();
 
