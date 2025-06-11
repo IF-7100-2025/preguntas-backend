@@ -9,6 +9,7 @@ import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.RankEntity;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.UserEntity;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.RankRepository;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.UserRepository;
+import ucr.ac.cr.learningcommunity.questionservice.models.ErrorCode;
 
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ public class GetProgressQueryImpl implements GetProgressQuery {
         try {
             Optional<UserEntity> userOpt = userRepository.findByUsername(username);
             if (userOpt.isEmpty()) {
-                return new Result.Error(404, "Usuario no encontrado: " + username);
+                return new Result.Error(ErrorCode.USER_NOT_FOUND.getHttpStatus(), ErrorCode.USER_NOT_FOUND.getDefaultMessage());
             }
 
             UserEntity user = userOpt.get();
@@ -35,7 +36,7 @@ public class GetProgressQueryImpl implements GetProgressQuery {
 
             Optional<RankEntity> currentRankOpt = rankRepository.findRankByXp(currentXP);
             if (currentRankOpt.isEmpty()) {
-                return new Result.Error(500, "No se encontró un rango para el XP: " + currentXP);
+                return new Result.Error(ErrorCode.RANK_NOT_FOUND.getHttpStatus(), ErrorCode.RANK_NOT_FOUND.getDefaultMessage());
             }
 
             RankEntity currentRankEntity = currentRankOpt.get();
@@ -57,7 +58,6 @@ public class GetProgressQueryImpl implements GetProgressQuery {
                         requiredXP
                 );
             } else {
-                // No hay siguiente rango (es el rango máximo)
                 nextRank = new RankInfoNext(null, null);
             }
 
@@ -70,7 +70,7 @@ public class GetProgressQueryImpl implements GetProgressQuery {
             return new Result.Success(response);
 
         } catch (Exception e) {
-            return new Result.Error(500, "Error al obtener progreso del usuario: " + e.getMessage());
+            return new Result.Error(ErrorCode.ERROR_NOT_IDENTIFIED.getHttpStatus(), "error obtaining user rank: " + e.getMessage());
         }
     }
 }
