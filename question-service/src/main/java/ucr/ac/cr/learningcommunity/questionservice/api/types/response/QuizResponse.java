@@ -1,8 +1,10 @@
 package ucr.ac.cr.learningcommunity.questionservice.api.types.response;
 
 import java.util.List;
+import java.util.UUID;
 
 public record QuizResponse(
+        UUID id,
         String status,
         List<Question> questions
 ) {
@@ -10,7 +12,7 @@ public record QuizResponse(
     public record Question(
             String username,
             String text,
-            byte[] image,
+            String image,
             int like,
             int dislike,
             List<Category> categories,

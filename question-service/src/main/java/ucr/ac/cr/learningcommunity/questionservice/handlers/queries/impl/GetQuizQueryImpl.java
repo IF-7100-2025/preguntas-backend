@@ -47,13 +47,16 @@ public class GetQuizQueryImpl implements GetQuizQuery {
 
                     List<QuizResponse.Category> categories = new ArrayList<>();
 
+                    String base64Image = Base64.getEncoder().encodeToString(question.getImage());
+                    String encodedImage = "data:image/jpeg;base64," + base64Image;
+
                     for (CategoryEntity category : question.getCategories()) {
                         categories.add(new QuizResponse.Category(category.getName()));
                     }
                     return new QuizResponse.Question(
                             username,
                             question.getText(),
-                            question.getImage(),
+                            encodedImage,
                             question.getLikes(),
                             question.getDislikes(),
                             categories,
@@ -63,6 +66,7 @@ public class GetQuizQueryImpl implements GetQuizQuery {
                 .toList();
 
         return new QuizResponse(
+                quiz.getId(),
                 quiz.getStatus(),
                 questions
         );
