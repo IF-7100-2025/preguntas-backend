@@ -8,6 +8,7 @@ import ucr.ac.cr.learningcommunity.questionservice.api.types.request.QuestionReq
 import ucr.ac.cr.learningcommunity.questionservice.api.types.response.ApiResponse;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.CreateQuestionHandler;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.queries.GetCategorySuggestionsQuery;
+import ucr.ac.cr.learningcommunity.questionservice.handlers.queries.GetQuestionsQuery;
 
 @RestController
 @RequestMapping("/api/private/questions")
@@ -15,13 +16,16 @@ public class QuestionController {
 
     private final GetCategorySuggestionsQuery suggestionsHandler;
     private final CreateQuestionHandler createQuestionHandler;
+    private final GetQuestionsQuery getQuestionsQuery;
 
     @Autowired
     public QuestionController(
             GetCategorySuggestionsQuery suggestionsHandler,
-            CreateQuestionHandler createQuestionHandler) {
+            CreateQuestionHandler createQuestionHandler,
+            GetQuestionsQuery getQuestionsQuery) {
         this.suggestionsHandler = suggestionsHandler;
         this.createQuestionHandler = createQuestionHandler;
+        this.getQuestionsQuery = getQuestionsQuery;
     }
 
     @PostMapping("/suggestions")
@@ -44,4 +48,14 @@ public class QuestionController {
             case CreateQuestionHandler.Result.InternalError internalError ->  ResponseEntity.status(internalError.status()).body(new ApiResponse(internalError.status(), internalError.msg()));
         };
     }
+
+    @GetMapping
+    public ResponseEntity<?> getQuestionsByUser(@RequestHeader("id") String userId) {
+        try {
+            var questions = getQuestionsQuery.getQuestionsByUserId(userId);
+            return ResponseEntity.ok(questions);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error getting questions from user: " + e.getMessage());
+        }
+}
 }

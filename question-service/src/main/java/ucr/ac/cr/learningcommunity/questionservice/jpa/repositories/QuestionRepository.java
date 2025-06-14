@@ -18,4 +18,5 @@ public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> 
     @Query("SELECT q FROM QuestionEntity q JOIN q.categories c WHERE c.name IN :categoryNames")
     List<QuestionEntity> findByCategoryNames(@Param("categoryNames") List<String> categoryNames);
 
+    List<QuestionEntity> findByCreatedBy_Id(String userId);
 }
