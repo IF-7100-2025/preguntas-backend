@@ -1,0 +1,2 @@
+ALTER TABLE users ADD COLUMN xp_amount INTEGER NOT NULL;
+

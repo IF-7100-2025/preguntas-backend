@@ -35,6 +35,9 @@ public class UserEntity {
     @Column(name = "profile_image", columnDefinition = "TEXT")
     private String profileImage;
 
+    @Column(name = "xp_amount", nullable = false)
+    private int xpAmount;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -51,12 +54,13 @@ public class UserEntity {
     private Set<QuestionEntity> createdQuestions = new HashSet<>();
     public UserEntity() {}
 
-    public UserEntity(String id, String username, String email, String password, String role) {
+    public UserEntity(String id, String username, String email, String password, String role, int xpAmount) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.xpAmount = xpAmount;
     }
 
     // Getters y Setters
@@ -108,6 +112,11 @@ public class UserEntity {
         this.profileImage = profileImage;
     }
 
+    public int getXP_Amount() {return xpAmount;}
+
+    public void setXp_Amount(int xpAmount){this.xpAmount = xpAmount;}
+
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -142,8 +151,10 @@ public class UserEntity {
                 ", role='" + role + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
+                ", xpAmount=" + xpAmount +
                 '}';
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

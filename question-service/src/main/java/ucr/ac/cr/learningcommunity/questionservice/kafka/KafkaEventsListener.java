@@ -32,6 +32,7 @@ public class KafkaEventsListener {
                     user.setEmail(registerUserData.getEmail());
                     user.setRole(registerUserData.getRole());
                     user.setPassword(registerUserData.getPassword());
+                    user.setXp_Amount(0);
                     userRepository.save(user);
                 }
             }
