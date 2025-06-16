@@ -2,10 +2,8 @@ package ucr.ac.cr.learningcommunity.questionservice.kafka;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
 import ucr.ac.cr.learningcommunity.questionservice.events.Event;
 import ucr.ac.cr.learningcommunity.questionservice.events.EventType;
-import ucr.ac.cr.learningcommunity.questionservice.events.RegisterUserEvent;
 import ucr.ac.cr.learningcommunity.questionservice.events.actions.ResgisterUser;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.UserEntity;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.UserRepository;
@@ -32,7 +30,7 @@ public class KafkaEventsListener {
                     user.setEmail(registerUserData.getEmail());
                     user.setRole(registerUserData.getRole());
                     user.setPassword(registerUserData.getPassword());
-                    user.setXp_Amount(0);
+                    user.setXpAmount(0); // CORREGIDO aquí
                     userRepository.save(user);
                 }
             }

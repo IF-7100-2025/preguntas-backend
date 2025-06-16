@@ -46,6 +46,7 @@ public class CreateQuestionHandlerImpl implements CreateQuestionHandler {
                 .orElseThrow(() -> validationError("User not found"));
         QuestionEntity question = createQuestionEntity(request, categories, user);
         processAnswerOptions(request.answerOptions(), question);
+        userRepository.updateProgressOnQuestionCreation(userId);
         return new Result.Success(201, "Question created successfully");
     }
 

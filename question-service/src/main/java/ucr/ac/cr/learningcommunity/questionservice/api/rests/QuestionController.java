@@ -46,14 +46,15 @@ public class QuestionController {
         };
     }
     @GetMapping("/progress")
-    public ResponseEntity<?> getUserProgress(@RequestBody ProgressRequest progressRequest){
-        var result = progressHandler.getProgressUser(progressRequest.username());
-        return switch (result){
+    public ResponseEntity<?> getUserProgress(@RequestParam String username) {
+        var result = progressHandler.getProgressUser(username);
+        return switch (result) {
             case GetProgressQuery.Result.Success success -> ResponseEntity.ok(success.userProgress());
-            case GetProgressQuery.Result.Error error ->  ResponseEntity.status(error.status())
-                    .body(new ApiResponse(error.status(),error.message()));
+            case GetProgressQuery.Result.Error error -> ResponseEntity.status(error.status())
+                    .body(new ApiResponse(error.status(), error.message()));
         };
     }
+
 
     @PostMapping
     public ResponseEntity<?> createQuestion(@RequestBody QuestionRequest request,

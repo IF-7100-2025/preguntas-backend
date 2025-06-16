@@ -32,7 +32,7 @@ public class GetProgressQueryImpl implements GetProgressQuery {
             }
 
             UserEntity user = userOpt.get();
-            int currentXP = user.getXP_Amount();
+            int currentXP = user.getXpAmount(); // <-- aquí corregido
 
             Optional<RankEntity> currentRankOpt = rankRepository.findRankByXp(currentXP);
             if (currentRankOpt.isEmpty()) {

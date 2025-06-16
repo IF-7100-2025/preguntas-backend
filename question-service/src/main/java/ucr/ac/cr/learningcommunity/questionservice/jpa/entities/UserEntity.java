@@ -3,6 +3,7 @@ package ucr.ac.cr.learningcommunity.questionservice.jpa.entities;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -46,12 +47,21 @@ public class UserEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "last_activity")
+    private LocalDateTime lastActivity;
+
+    @Column(name = "daily_streak", nullable = false)
+    private int dailyStreak = 0;
+
+    @Column(name = "current_rank", length = 50)
+    private String currentRank;
+
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<QuizEntity> createdQuizzes = new HashSet<>();
 
-    // Relación con preguntas creadas
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<QuestionEntity> createdQuestions = new HashSet<>();
+
     public UserEntity() {}
 
     public UserEntity(String id, String username, String email, String password, String role, int xpAmount) {
@@ -63,7 +73,7 @@ public class UserEntity {
         this.xpAmount = xpAmount;
     }
 
-    // Getters y Setters
+    // Getters y setters
     public String getId() {
         return id;
     }
@@ -112,10 +122,13 @@ public class UserEntity {
         this.profileImage = profileImage;
     }
 
-    public int getXP_Amount() {return xpAmount;}
+    public int getXpAmount() {
+        return xpAmount;
+    }
 
-    public void setXp_Amount(int xpAmount){this.xpAmount = xpAmount;}
-
+    public void setXpAmount(int xpAmount) {
+        this.xpAmount = xpAmount;
+    }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -124,7 +137,31 @@ public class UserEntity {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
-    // Agrega estos nuevos getters y setters
+
+    public LocalDateTime getLastActivity() {
+        return lastActivity;
+    }
+
+    public void setLastActivity(LocalDateTime lastActivity) {
+        this.lastActivity = lastActivity;
+    }
+
+    public int getDailyStreak() {
+        return dailyStreak;
+    }
+
+    public void setDailyStreak(int dailyStreak) {
+        this.dailyStreak = dailyStreak;
+    }
+
+    public String getCurrentRank() {
+        return currentRank;
+    }
+
+    public void setCurrentRank(String currentRank) {
+        this.currentRank = currentRank;
+    }
+
     public Set<QuizEntity> getCreatedQuizzes() {
         return createdQuizzes;
     }
@@ -141,10 +178,9 @@ public class UserEntity {
         this.createdQuestions = createdQuestions;
     }
 
-    // toString() para logging/debugging
     @Override
     public String toString() {
-        return "User{" +
+        return "UserEntity{" +
                 "id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
@@ -152,15 +188,17 @@ public class UserEntity {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", xpAmount=" + xpAmount +
+                ", lastActivity=" + lastActivity +
+                ", dailyStreak=" + dailyStreak +
+                ", currentRank='" + currentRank + '\'' +
                 '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserEntity user = (UserEntity) o;
-        return id.equals(user.id);
+        if (!(o instanceof UserEntity user)) return false;
+        return Objects.equals(id, user.id);
     }
 
     @Override
