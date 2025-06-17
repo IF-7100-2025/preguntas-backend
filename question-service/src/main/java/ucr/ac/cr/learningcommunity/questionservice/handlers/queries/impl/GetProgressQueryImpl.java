@@ -1,8 +1,6 @@
 package ucr.ac.cr.learningcommunity.questionservice.handlers.queries.impl;
 
 import org.springframework.stereotype.Service;
-import ucr.ac.cr.learningcommunity.questionservice.api.types.response.RankInfoCurrent;
-import ucr.ac.cr.learningcommunity.questionservice.api.types.response.RankInfoNext;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.response.UserProgressResponse;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.queries.GetProgressQuery;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.RankEntity;
@@ -10,6 +8,8 @@ import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.UserEntity;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.RankRepository;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.UserRepository;
 import ucr.ac.cr.learningcommunity.questionservice.models.ErrorCode;
+import ucr.ac.cr.learningcommunity.questionservice.api.types.response.RankInfoCurrent;
+import ucr.ac.cr.learningcommunity.questionservice.api.types.response.RankInfoNext;
 
 import java.util.Optional;
 
@@ -32,7 +32,7 @@ public class GetProgressQueryImpl implements GetProgressQuery {
             }
 
             UserEntity user = userOpt.get();
-            int currentXP = user.getXP_Amount();
+            int currentXP = user.getXpAmount();
 
             Optional<RankEntity> currentRankOpt = rankRepository.findRankByXp(currentXP);
             if (currentRankOpt.isEmpty()) {
@@ -61,10 +61,20 @@ public class GetProgressQueryImpl implements GetProgressQuery {
                 nextRank = new RankInfoNext(null, null);
             }
 
+            // Construir respuesta plana
+            String rankName = currentRank.name();
+            String nextRankName = nextRank.name() == null ? null : nextRank.name();
+            double progress = nextRank.requiredXP() == null
+                    ? 100.0
+                    : (double) currentXP * 100 / (currentXP + nextRank.requiredXP());
+
             UserProgressResponse response = new UserProgressResponse(
                     currentXP,
-                    currentRank,
-                    nextRank
+                    rankName,
+                    nextRankName,
+                    progress,
+                    user.getLastActivity(),
+                    user.getDailyStreak()
             );
 
             return new Result.Success(response);
