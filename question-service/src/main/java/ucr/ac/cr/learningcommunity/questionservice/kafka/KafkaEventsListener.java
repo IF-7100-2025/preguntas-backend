@@ -6,6 +6,7 @@ import ucr.ac.cr.learningcommunity.questionservice.events.Event;
 import ucr.ac.cr.learningcommunity.questionservice.events.EventType;
 import ucr.ac.cr.learningcommunity.questionservice.events.actions.ResgisterUser;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.UserEntity;
+import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.RankRepository;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.UserRepository;
 import ucr.ac.cr.learningcommunity.questionservice.models.BaseException;
 import ucr.ac.cr.learningcommunity.questionservice.models.ErrorCode;
@@ -13,9 +14,11 @@ import ucr.ac.cr.learningcommunity.questionservice.models.ErrorCode;
 @Service
 public class KafkaEventsListener {
     private final UserRepository userRepository;
+    private final RankRepository rankRepository;
 
-    public KafkaEventsListener(UserRepository userRepository) {
+    public KafkaEventsListener(UserRepository userRepository, RankRepository rankRepository) {
         this.userRepository = userRepository;
+        this.rankRepository = rankRepository;
     }
 
     @KafkaListener(topics = "user-registered-topic2", groupId = "user-sync-group")
@@ -30,7 +33,15 @@ public class KafkaEventsListener {
                     user.setEmail(registerUserData.getEmail());
                     user.setRole(registerUserData.getRole());
                     user.setPassword(registerUserData.getPassword());
-                    user.setXpAmount(0); // CORREGIDO aquí
+                    user.setXpAmount(0); // XP inicial
+                    user.setDailyStreak(1); // Streak inicial opcional
+                    user.setLastActivity(java.time.LocalDate.now()); // Fecha de actividad inicial
+
+                    // Asignar rango según XP = 0
+                    rankRepository.findRankByXp(0).ifPresent(rank ->
+                            user.setCurrentRank(rank.getRank())
+                    );
+
                     userRepository.save(user);
                 }
             }
