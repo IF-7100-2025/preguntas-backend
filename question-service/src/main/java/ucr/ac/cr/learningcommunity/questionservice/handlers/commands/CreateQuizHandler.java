@@ -9,7 +9,6 @@ public interface CreateQuizHandler {
         record Success(int status, String msg) implements Result{}
         record Unauthorized(int status, String msg) implements Result{}
         record InternalError(int status, String msg) implements Result{}
-
     }
 Result createQuiz(QuizRequest command, String userId);
 }
