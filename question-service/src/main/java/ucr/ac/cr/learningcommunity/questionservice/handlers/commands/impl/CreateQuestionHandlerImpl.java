@@ -11,6 +11,7 @@ import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.UserEntity;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.AnswerOptionRepository;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.CategoryRepository;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.QuestionRepository;
+import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.RankRepository;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.UserRepository;
 import ucr.ac.cr.learningcommunity.questionservice.models.BaseException;
 import ucr.ac.cr.learningcommunity.questionservice.models.ErrorCode;
@@ -21,20 +22,28 @@ import java.util.UUID;
 
 @Service
 public class CreateQuestionHandlerImpl implements CreateQuestionHandler {
+
     private final QuestionRepository questionRepository;
     private final CategoryRepository categoryRepository;
     private final AnswerOptionRepository answerOptionRepository;
     private final UserRepository userRepository;
-    private static final int MAX_IMAGE_SIZE = 2_097_152; // Límite de 2MB
+    private final RankRepository rankRepository;
 
-    public CreateQuestionHandlerImpl(QuestionRepository questionRepository,
-                                     CategoryRepository categoryRepository,
-                                     AnswerOptionRepository answerOptionRepository,
-                                     UserRepository userRepository) {
+    private static final int MAX_IMAGE_SIZE = 2_097_152; // 2MB
+    private static final int XP_PER_QUESTION = 10;
+
+    public CreateQuestionHandlerImpl(
+            QuestionRepository questionRepository,
+            CategoryRepository categoryRepository,
+            AnswerOptionRepository answerOptionRepository,
+            UserRepository userRepository,
+            RankRepository rankRepository
+    ) {
         this.questionRepository = questionRepository;
         this.categoryRepository = categoryRepository;
         this.answerOptionRepository = answerOptionRepository;
         this.userRepository = userRepository;
+        this.rankRepository = rankRepository;
     }
 
     @Transactional
@@ -44,11 +53,29 @@ public class CreateQuestionHandlerImpl implements CreateQuestionHandler {
         List<CategoryEntity> categories = processCategories(request.categories());
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> validationError("User not found"));
+
+        // Crear y guardar pregunta con opciones
         QuestionEntity question = createQuestionEntity(request, categories, user);
         processAnswerOptions(request.answerOptions(), question);
-        userRepository.updateProgressOnQuestionCreation(userId);
+
+        // Actualizamos XP, streak y fecha
+        int newStreak = userRepository.calculateNewStreak(userId);
+        userRepository.updateProgress(userId, newStreak);
+
+        //Refrescamos entidad para obtener XP actualizado
+        UserEntity refreshedUser = userRepository.findById(userId)
+                .orElseThrow();
+        int newXP = refreshedUser.getXpAmount();
+
+        //Rango
+        rankRepository.findRankByXp(newXP)
+                .ifPresent(rank -> refreshedUser.setCurrentRank(rank.getRank()));
+
+        userRepository.save(refreshedUser);
+
         return new Result.Success(201, "Question created successfully");
     }
+
 
     private void validateRequest(QuestionRequest request, String id) {
         validateUser(id);
@@ -56,36 +83,36 @@ public class CreateQuestionHandlerImpl implements CreateQuestionHandler {
         validateAnswerOptions(request.answerOptions());
         validateCategories(request.categories());
         validateExplanation(request.explanation());
-
     }
+
     private void validateUser(String id) {
         if (id == null || id.isBlank()) {
             throw validationError("User id is required");
         }
     }
+
     private void validateQuestionText(String text) {
         if (text == null || text.isBlank()) {
             throw validationError("Question text is required");
         }
-
         if (text.length() > 210 || text.length() < 10) {
             throw validationError("Question text must be between 10 and 210 characters");
         }
     }
+
     private void validateExplanation(String explanation) {
         if (explanation == null || explanation.isBlank()) {
             throw validationError("Explanation is required");
         }
-
         if (explanation.length() < 10 || explanation.length() > 999) {
             throw validationError("Explanation is no longer valid");
         }
     }
+
     private void validateCategories(List<String> categories) {
         if (categories == null || categories.isEmpty()) {
             throw validationError("At least one category is required");
         }
-
         if (categories.size() > 3) {
             throw validationError("Maximum 3 categories allowed");
         }
@@ -118,10 +145,12 @@ public class CreateQuestionHandlerImpl implements CreateQuestionHandler {
         if (categoryNames.size() != categoryNames.stream().distinct().count()) {
             throw validationError("Duplicate categories are not allowed");
         }
+
         List<CategoryEntity> existingCategories = categoryRepository.findAllByNameIn(categoryNames);
         List<String> missingCategories = categoryNames.stream()
                 .filter(name -> existingCategories.stream().noneMatch(c -> c.getName().equals(name)))
                 .toList();
+
         if (!missingCategories.isEmpty()) {
             throw BaseException.exceptionBuilder()
                     .code(ErrorCode.CATEGORIES_NOT_FOUND)
@@ -134,15 +163,17 @@ public class CreateQuestionHandlerImpl implements CreateQuestionHandler {
 
     private QuestionEntity createQuestionEntity(QuestionRequest request, List<CategoryEntity> categories, UserEntity user) {
         QuestionEntity question = new QuestionEntity();
-        question.setText(request.text());
         question.setId(UUID.randomUUID());
-        question.setCreatedBy(user);
+        question.setText(request.text());
         question.setExplanation(request.explanation());
+        question.setCreatedBy(user);
         question.setLikes(0);
         question.setDislikes(0);
+
         if (request.imageBase64() != null && !request.imageBase64().isBlank()) {
             processQuestionImage(request.imageBase64(), question);
         }
+
         question.getCategories().addAll(categories);
         return questionRepository.save(question);
     }
@@ -156,15 +187,14 @@ public class CreateQuestionHandlerImpl implements CreateQuestionHandler {
             answerOptionRepository.save(option);
         }
     }
+
     private void processQuestionImage(String base64, QuestionEntity question) {
         String cleanBase64 = cleanBase64(base64);
-
         if (!isValidBase64(cleanBase64)) {
             throw validationError("Invalid image format");
         }
 
         byte[] imageBytes = Base64.getDecoder().decode(cleanBase64);
-
         if (imageBytes.length > MAX_IMAGE_SIZE) {
             throw validationError("Image size exceeds maximum allowed (2MB)");
         }

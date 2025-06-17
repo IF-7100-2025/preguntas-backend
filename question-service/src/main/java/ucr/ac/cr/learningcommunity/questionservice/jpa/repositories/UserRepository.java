@@ -9,21 +9,32 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<UserEntity, String> {
-    @Modifying
-    @Query("""
-    UPDATE UserEntity u
-    SET 
-        u.xpAmount = u.xpAmount + 10,
-        u.lastActivity = CURRENT_TIMESTAMP,
-        u.dailyStreak = CASE
-            WHEN CURRENT_DATE - CAST(u.lastActivity AS date) = 1 THEN u.dailyStreak + 1
-            WHEN CURRENT_DATE - CAST(u.lastActivity AS date) = 0 THEN u.dailyStreak
-            ELSE 1
-        END
-    WHERE u.id = :userId
-""")
-    void updateProgressOnQuestionCreation(@Param("userId") String userId);
 
+    @Query(value = """
+        SELECT 
+            CASE
+                WHEN CURRENT_DATE - DATE(last_activity) = 1 THEN daily_streak + 1
+                WHEN CURRENT_DATE - DATE(last_activity) = 0 THEN daily_streak
+                ELSE 1
+            END
+        FROM users
+        WHERE id_user = :userId
+    """, nativeQuery = true)
+    int calculateNewStreak(@Param("userId") String userId);
+
+    @Modifying
+    @Transactional
+    @Query(value = """
+        UPDATE users
+        SET 
+            xp_amount = xp_amount + 10,
+            daily_streak = :newStreak,
+            last_activity = CURRENT_DATE
+        WHERE id_user = :userId
+    """, nativeQuery = true)
+    void updateProgress(@Param("userId") String userId, @Param("newStreak") int newStreak);
+
+    // Ya existentes
     Optional<UserEntity> findById(String id);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);

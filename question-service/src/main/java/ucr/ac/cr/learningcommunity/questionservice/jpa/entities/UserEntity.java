@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -48,7 +49,7 @@ public class UserEntity {
     private LocalDateTime updatedAt;
 
     @Column(name = "last_activity")
-    private LocalDateTime lastActivity;
+    private LocalDate lastActivity;
 
     @Column(name = "daily_streak", nullable = false)
     private int dailyStreak = 0;
@@ -138,11 +139,11 @@ public class UserEntity {
         return updatedAt;
     }
 
-    public LocalDateTime getLastActivity() {
+    public LocalDate getLastActivity() {
         return lastActivity;
     }
 
-    public void setLastActivity(LocalDateTime lastActivity) {
+    public void setLastActivity(LocalDate lastActivity) {
         this.lastActivity = lastActivity;
     }
 
