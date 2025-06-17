@@ -7,6 +7,7 @@ import ucr.ac.cr.learningcommunity.questionservice.api.types.request.CategorizeS
 import ucr.ac.cr.learningcommunity.questionservice.api.types.request.QuestionRequest;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.response.ApiResponse;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.CreateQuestionHandler;
+import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.DeleteQuestionHandler;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.queries.GetCategorySuggestionsQuery;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.queries.GetQuestionsQuery;
 
@@ -17,6 +18,10 @@ public class QuestionController {
     private final GetCategorySuggestionsQuery suggestionsHandler;
     private final CreateQuestionHandler createQuestionHandler;
     private final GetQuestionsQuery getQuestionsQuery;
+
+    // Inyección por campo para no modificar el constructor existente
+    @Autowired
+    private DeleteQuestionHandler deleteQuestionHandler;
 
     @Autowired
     public QuestionController(
@@ -38,14 +43,15 @@ public class QuestionController {
             case GetCategorySuggestionsQuery.Result.InternalError internalError -> ResponseEntity.status(internalError.status()).body(internalError.msg());
         };
     }
+
     @PostMapping
     public ResponseEntity<?> createQuestion(@RequestBody QuestionRequest request,
                                             @RequestHeader("id") String id) {
         var result = createQuestionHandler.createQuestion(request, id);
-       return switch (result) {
-            case CreateQuestionHandler.Result.Success success ->  ResponseEntity.ok().body(new ApiResponse(success.status(), success.msg()));
-            case CreateQuestionHandler.Result.Unauthorized unauthorized ->  ResponseEntity.status(unauthorized.status()).body(new ApiResponse(unauthorized.status(), unauthorized.msg()));
-            case CreateQuestionHandler.Result.InternalError internalError ->  ResponseEntity.status(internalError.status()).body(new ApiResponse(internalError.status(), internalError.msg()));
+        return switch (result) {
+            case CreateQuestionHandler.Result.Success success -> ResponseEntity.ok().body(new ApiResponse(success.status(), success.msg()));
+            case CreateQuestionHandler.Result.Unauthorized unauthorized -> ResponseEntity.status(unauthorized.status()).body(new ApiResponse(unauthorized.status(), unauthorized.msg()));
+            case CreateQuestionHandler.Result.InternalError internalError -> ResponseEntity.status(internalError.status()).body(new ApiResponse(internalError.status(), internalError.msg()));
         };
     }
 
@@ -57,5 +63,25 @@ public class QuestionController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error getting questions from user: " + e.getMessage());
         }
-}
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteQuestion(
+            @PathVariable("id") String questionId
+    ) {
+        var result = deleteQuestionHandler.deleteQuestion(questionId);
+        return switch (result) {
+            case DeleteQuestionHandler.Result.Success success ->
+                    ResponseEntity.ok(new ApiResponse(success.status(), success.msg()));
+            case DeleteQuestionHandler.Result.Unauthorized unauthorized ->
+                    ResponseEntity.status(unauthorized.status())
+                            .body(new ApiResponse(unauthorized.status(), unauthorized.msg()));
+            case DeleteQuestionHandler.Result.NotFound notFound ->
+                    ResponseEntity.status(notFound.status())
+                            .body(new ApiResponse(notFound.status(), notFound.msg()));
+            case DeleteQuestionHandler.Result.InternalError internalError ->
+                    ResponseEntity.status(internalError.status())
+                            .body(new ApiResponse(internalError.status(), internalError.msg()));
+        };
+    }
 }
