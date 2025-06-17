@@ -7,6 +7,7 @@ import ucr.ac.cr.learningcommunity.questionservice.api.types.request.CategorizeS
 import ucr.ac.cr.learningcommunity.questionservice.api.types.request.ProgressRequest;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.request.QuestionRequest;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.response.ApiResponse;
+import ucr.ac.cr.learningcommunity.questionservice.api.types.response.UserProgressResponse;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.CreateQuestionHandler;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.queries.GetCategorySuggestionsQuery;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.queries.GetProgressQuery;
@@ -46,12 +47,14 @@ public class QuestionController {
         };
     }
     @GetMapping("/progress")
-    public ResponseEntity<?> getUserProgress(@RequestParam String username) {
+    public ResponseEntity<?> getUserProgress(@RequestHeader("username") String username) {
         var result = progressHandler.getProgressUser(username);
         return switch (result) {
-            case GetProgressQuery.Result.Success success -> ResponseEntity.ok(success.userProgress());
-            case GetProgressQuery.Result.Error error -> ResponseEntity.status(error.status())
-                    .body(new ApiResponse(error.status(), error.message()));
+            case GetProgressQuery.Result.Success success ->
+                    ResponseEntity.ok(success.userProgress());
+            case GetProgressQuery.Result.Error error ->
+                    ResponseEntity.status(error.status())
+                            .body(new ApiResponse(error.status(), error.message()));
         };
     }
 
