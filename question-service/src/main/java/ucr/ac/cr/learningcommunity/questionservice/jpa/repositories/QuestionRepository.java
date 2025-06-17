@@ -5,9 +5,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.QuestionEntity;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface QuestionRepository extends JpaRepository<QuestionEntity, Long>  {
+
+    Optional<QuestionEntity> findById(UUID uuid);
 
     //long countByCategory_Id(Long id);
     long countByText(String text);
