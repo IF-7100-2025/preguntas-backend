@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.UUID;
 
 public record QuizResponse(
-        UUID id,
+        UUID quizId,
         String status,
         List<Question> questions
 ) {
 
     public record Question(
+            UUID questionId,
             String username,
             String text,
             String image,

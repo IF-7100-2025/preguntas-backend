@@ -58,6 +58,7 @@ public class GetQuizQueryImpl implements GetQuizQuery {
                         categories.add(new QuizResponse.Category(category.getName()));
                     }
                     return new QuizResponse.Question(
+                            question.getId(),
                             username,
                             question.getText(),
                             encodedImage,
