@@ -78,7 +78,9 @@ public class GetQuizQueryImpl implements GetQuizQuery {
 
     private List<QuizResponse.AnswerOption> mapAnswerOptions(Set<AnswerOptionEntity> answerOptions) {
         return new ArrayList<>(answerOptions).stream()
-                .map(answerOption -> new QuizResponse.AnswerOption(answerOption.getText()
+                .map(answerOption -> new QuizResponse.AnswerOption(
+                        answerOption.getId(),
+                        answerOption.getText()
                 ))
                 .toList();
     }

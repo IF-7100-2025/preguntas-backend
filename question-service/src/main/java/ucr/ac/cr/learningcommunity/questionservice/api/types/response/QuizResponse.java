@@ -24,6 +24,7 @@ public record QuizResponse(
     ) {}
 
     public record AnswerOption(
+            Long id,
             String text
     ) {}
 }
