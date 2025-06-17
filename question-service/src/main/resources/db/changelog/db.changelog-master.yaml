@@ -98,15 +98,53 @@ databaseChangeLog:
             stripComments: true
   - changeSet:
       id: 10
-      author: axel
+      author: jaziel
       changes:
         - sqlFile:
-            path: 005-create-question-report.sql
+            path: 005-alter-user-experience.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+
+  - changeSet:
+      id: 11
+      author: jaziel
+      changes:
+        - sqlFile:
+            path: 005-create-rank-table.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+
+  - changeSet:
+      id: 12
+      author: jaziel
+      changes:
+        - sqlFile:
+            path: 005-insert-rank-data.sql
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
   - changeSet:
-      id: 11
+      id: 13
+      author: irola
+      changes:
+        - sqlFile:
+            path: 005-alter-user-progression.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+  - changeSet:
+      id: 14
+      author: axel
+      changes:
+        - sqlFile:
+            path: 006-create-question-report.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+  - changeSet:
+      id: 15
       author: axel
       changes:
         - sqlFile:
