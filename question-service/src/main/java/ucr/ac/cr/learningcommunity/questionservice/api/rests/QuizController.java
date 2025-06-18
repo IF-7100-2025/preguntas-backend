@@ -57,7 +57,7 @@ public class QuizController {
 
     }
 
-    @PostMapping("/{id_quiz}/grade")
+    @PostMapping("endtest/{id_quiz}")
     public ResponseEntity<?> gradeToQuiz(@PathVariable("id_quiz") UUID id_quiz,
                                          @RequestBody GradeToQuizRequest request) {
 

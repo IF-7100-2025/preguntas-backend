@@ -13,7 +13,9 @@ import ucr.ac.cr.learningcommunity.questionservice.models.BaseException;
 import ucr.ac.cr.learningcommunity.questionservice.models.ErrorCode;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class GradeToQuizHandlerImpl implements GradeToQuizHandler {
@@ -60,43 +62,36 @@ public class GradeToQuizHandlerImpl implements GradeToQuizHandler {
     }
 
     private int gradeQuiz(GradeToQuizRequest request) {
-        int totalQuestions = request.questions().size();
         int correctAnswers = 0;
 
         for (GradeToQuizRequest.QuestionResponse questionResponse : request.questions()) {
-
             QuestionEntity question = questionRepository.findById(questionResponse.questionID())
-                    .orElseThrow(() -> new RuntimeException("Question no found"));
+                    .orElseThrow(() -> new RuntimeException("Question not found"));
 
             List<AnswerOptionEntity> answerOptions = answerOptionRepository.findByQuestionId(question.getId());
 
-
-            // Buscar la respuesta correcta
-            AnswerOptionEntity correctAnswer = answerOptions.stream()
+            Set<Long> correctAnswerIds = answerOptions.stream()
                     .filter(AnswerOptionEntity::isCorrect)
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("Respuesta correcta no encontrada"));
+                    .map(AnswerOptionEntity::getId)
+                    .collect(Collectors.toSet());
 
-
-            // Comparar las respuestas seleccionadas por el usuario
-            for (Long selectedAnswerId : questionResponse.selectedAnswersId()) {
-                // Buscar la respuesta seleccionada por ID
-                AnswerOptionEntity selectedAnswer = answerOptionRepository.findById(selectedAnswerId)
-                        .orElseThrow(() -> new RuntimeException("Not Found"));
-
-                // Si la respuesta seleccionada es la correcta, sumamos al contador
-                if (selectedAnswer.isCorrect()) {
-                    correctAnswers++;
-                }
-
+            if (questionResponse.selectedAnswersId().size() != correctAnswerIds.size()) {
+                continue;
             }
 
+            for (Long selectedAnswerId : questionResponse.selectedAnswersId()) {
+                if (!correctAnswerIds.contains(selectedAnswerId)) {
+                    continue;
+                }
+                correctAnswers++;
+            }
         }
         return correctAnswers;
     }
 
+
     private int calculateScore(int correctAnswers, int amountOfQuestions){
-        return (correctAnswers / amountOfQuestions ) * 100;
+        return (int) (((double) correctAnswers / amountOfQuestions) * 100);
     }
 
     private BaseException validationError(String message){
@@ -105,6 +100,4 @@ public class GradeToQuizHandlerImpl implements GradeToQuizHandler {
                 .message(message)
                 .build();
     }
-
-
 }
