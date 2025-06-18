@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 
 public record GradeToQuizRequest(
-        String userId,
         UUID quizId,
         List<QuestionResponse> questions
 ) {
