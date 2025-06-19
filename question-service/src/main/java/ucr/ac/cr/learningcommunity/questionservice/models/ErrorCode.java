@@ -13,6 +13,7 @@ public enum ErrorCode {
     QUIZ_NOT_FOUND(404, "Quiz not found"),
     CATEGORY_ALREADY_EXISTS(401,"Category already exists"),
     IA_SERVICE_ERROR(400,"Error with IA service, please try again later"),
+    QUESTION_NOT_FOUND(404,"Question not found"),
     IA_SERVICE_COMMUNICATION_ERROR(501,"Error comunicating with IA service, please try again later");
     private final int status;
     private final String message;
