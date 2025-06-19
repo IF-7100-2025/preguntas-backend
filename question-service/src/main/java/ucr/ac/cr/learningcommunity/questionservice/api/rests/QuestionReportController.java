@@ -41,19 +41,8 @@ public class QuestionReportController {
     }
 
     @PutMapping("/deny/{questionId}")
-    public ResponseEntity<ApiResponse> denyReports(
-            @PathVariable("questionId") String questionId
-    ) {
-        var result = denyQuestionReportsHandler.denyReports(questionId);
-        return switch (result) {
-            case DenyQuestionReportsHandler.Result.Success success ->
-                    ResponseEntity.ok(new ApiResponse(success.status(), success.msg()));
-            case DenyQuestionReportsHandler.Result.NotFound notFound ->
-                    ResponseEntity.status(notFound.status())
-                            .body(new ApiResponse(notFound.status(), notFound.msg()));
-            case DenyQuestionReportsHandler.Result.InternalError internalError ->
-                    ResponseEntity.status(internalError.status())
-                            .body(new ApiResponse(internalError.status(), internalError.msg()));
-        };
+    public ResponseEntity<ApiResponse> denyReports(@PathVariable String questionId) {
+        ApiResponse resp = denyQuestionReportsHandler.denyReports(questionId);
+        return ResponseEntity.status(resp.status()).body(resp);
     }
 }

@@ -1,12 +1,7 @@
 package ucr.ac.cr.learningcommunity.questionservice.handlers.commands;
 
+import ucr.ac.cr.learningcommunity.questionservice.api.types.response.ApiResponse;
+
 public interface DenyQuestionReportsHandler {
-
-    Result denyReports(String questionId);
-
-    sealed interface Result {
-        record Success(int status, String msg) implements Result {}
-        record NotFound(int status, String msg) implements Result {}
-        record InternalError(int status, String msg) implements Result {}
-    }
+    ApiResponse denyReports(String questionId);
 }

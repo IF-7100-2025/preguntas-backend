@@ -61,7 +61,7 @@ public class GetReportedQuestionsQueryImpl implements GetReportedQuestionsQuery 
         }
         QuestionEntity question = questionRepository.findById(qid)
                 .orElseThrow(() -> BaseException.exceptionBuilder()
-                        .code(ErrorCode.valueOf("QUESTION_NOT_FOUND"))
+                        .code(ErrorCode.QUESTION_NOT_FOUND)
                         .message("Question not found: " + questionId)
                         .build()
                 );
