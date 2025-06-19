@@ -13,6 +13,7 @@ import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.QuizReposito
 import ucr.ac.cr.learningcommunity.questionservice.models.BaseException;
 import ucr.ac.cr.learningcommunity.questionservice.models.ErrorCode;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -45,6 +46,8 @@ public class GradeToQuizHandlerImpl implements GradeToQuizHandler {
 
             GradeToQuizResponse response = mapToGradeToQuizResponse(gradeToQuizRequest, quizId);
 
+            stateToQuiz(quizId);
+
             return new Result.Success(response);
 
         }else{
@@ -53,6 +56,10 @@ public class GradeToQuizHandlerImpl implements GradeToQuizHandler {
                     ErrorCode.QUIZ_NOT_FOUND.getDefaultMessage()
             );
         }
+    }
+
+    private void stateToQuiz(UUID quizId){
+        quizRepository.updateQuizStatusAndCompletion(quizId, "completed", LocalDateTime.now());
     }
 
     private void validateRequest(UUID quizId){
@@ -141,7 +148,7 @@ public class GradeToQuizHandlerImpl implements GradeToQuizHandler {
             questionResults.add(result);
         }
 
-        return new GradeToQuizResponse(quizId, calculateScore(correctAnswer, totalQuestions), questionResults);
+        return new GradeToQuizResponse(quizId, "completed", calculateScore(correctAnswer, totalQuestions), questionResults);
     }
 
 

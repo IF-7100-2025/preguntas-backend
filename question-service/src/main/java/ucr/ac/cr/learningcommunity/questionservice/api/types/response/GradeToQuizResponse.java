@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public record GradeToQuizResponse (
         UUID id,
+        String status,
         int grade,
         List<QuestionResult> questionResults
 ) {
