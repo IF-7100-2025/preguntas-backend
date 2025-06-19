@@ -41,7 +41,7 @@ public class GradeToQuizHandlerImpl implements GradeToQuizHandler {
 
         if (quizRepository.findById(quizId).isPresent()){
             totalQuestions = quizRepository.countQuestionsByQuizId(quizId);
-            correctAnswer = gradeQuiz(gradeToQuizRequest);
+            correctAnswer = gradeQuiz(gradeToQuizRequest, quizId);
 
             GradeToQuizResponse response = mapToGradeToQuizResponse(gradeToQuizRequest, quizId);
 
@@ -65,12 +65,12 @@ public class GradeToQuizHandlerImpl implements GradeToQuizHandler {
         }
     }
 
-    private int gradeQuiz(GradeToQuizRequest request) {
+    private int gradeQuiz(GradeToQuizRequest request, UUID quizId) {
         int correctAnswers = 0;
 
         for (GradeToQuizRequest.QuestionResponse questionResponse : request.questions()) {
 
-            QuestionEntity question = getQuestionById(questionResponse.questionID());
+            QuestionEntity question = getQuestionById(questionResponse.questionID(),quizId);
 
             List<AnswerOptionEntity> answerOptions = answerOptionRepository.findByQuestionId(question.getId());
 
@@ -93,10 +93,12 @@ public class GradeToQuizHandlerImpl implements GradeToQuizHandler {
         return correctAnswers;
     }
 
-    private QuestionEntity getQuestionById(UUID questionId) {
-        return questionRepository.findById(questionId)
-                .orElseThrow(() -> validationError("Question not found"));
+    private QuestionEntity getQuestionById(UUID questionId, UUID quizId) {
+        // Buscar la pregunta por su ID y asegurarse de que pertenece al quiz
+        return questionRepository.findByQuizIdAndId(quizId, questionId)
+                .orElseThrow(() -> validationError("Question not found or not associated with the quiz"));
     }
+
 
     private int calculateScore(int correctAnswers, int amountOfQuestions){
         return (int) (((double) correctAnswers / amountOfQuestions) * 100);
@@ -107,7 +109,7 @@ public class GradeToQuizHandlerImpl implements GradeToQuizHandler {
 
         for (GradeToQuizRequest.QuestionResponse questionResponse : gradeToQuizRequest.questions()) {
 
-            QuestionEntity question = getQuestionById(questionResponse.questionID());
+            QuestionEntity question = getQuestionById(questionResponse.questionID(), quizId);
 
             List<AnswerOptionEntity> answerOptions = answerOptionRepository.findByQuestionId(question.getId());
 

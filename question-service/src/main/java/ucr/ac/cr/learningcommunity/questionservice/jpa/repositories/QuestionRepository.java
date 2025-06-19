@@ -21,5 +21,8 @@ public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> 
 
     List<QuestionEntity> findByCreatedBy_Id(String userId);
 
+    @Query("SELECT q FROM QuestionEntity q JOIN q.quizzes quiz WHERE quiz.id = :quizId AND q.id = :questionId")
+    Optional<QuestionEntity> findByQuizIdAndId(@Param("quizId") UUID quizId, @Param("questionId") UUID questionId);
+
 
 }
