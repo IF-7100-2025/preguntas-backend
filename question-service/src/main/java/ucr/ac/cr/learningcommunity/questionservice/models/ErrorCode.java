@@ -9,6 +9,7 @@ public enum ErrorCode {
     VALIDATION_ERROR(400, "Validation error"),
     NOT_AUTHORIZED(401, "User not authorized"),
     INVALID_PASSWORD(401, "Invalid password"),
+    ERORR_CREATING_REPORT(400, "Error creating report"),
     USER_NOT_FOUND(404, "User not found"),
     QUIZ_NOT_FOUND(404, "Quiz not found"),
     CATEGORY_ALREADY_EXISTS(401,"Category already exists"),
