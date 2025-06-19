@@ -65,7 +65,7 @@ public class QuizController {
 
         return switch (result) {
             case GradeToQuizHandler.Result.Success success ->
-                    ResponseEntity.ok().body((success.score()));
+                    ResponseEntity.ok().body((success.gradeToQuizResponse()));
             case GradeToQuizHandler.Result.Error error ->
                     ResponseEntity.status(400).body(new ApiResponse(error.status(), error.message()));
         };
