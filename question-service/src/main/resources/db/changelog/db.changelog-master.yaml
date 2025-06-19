@@ -96,7 +96,6 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
-
   - changeSet:
       id: 10
       author: jaziel
@@ -132,6 +131,24 @@ databaseChangeLog:
       changes:
         - sqlFile:
             path: 005-alter-user-progression.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+  - changeSet:
+      id: 14
+      author: axel
+      changes:
+        - sqlFile:
+            path: 005-create-question-report.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+  - changeSet:
+      id: 15
+      author: axel
+      changes:
+        - sqlFile:
+            path: 006-alter-question-table.sql
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
