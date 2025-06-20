@@ -10,11 +10,12 @@ import java.util.UUID;
 
 public interface QuestionRepository extends JpaRepository<QuestionEntity, Long>  {
 
-    //long countByCategory_Id(Long id);
+    Optional<QuestionEntity> findById(UUID uuid);
+
     long countByText(String text);
     
     int countByCategories_Id(Long categoryId);
-  
+
     // obtiene todas las preguntas de las categorías que el usuario indicó.
     //TODO: Hay que hacerlo también por visibilidad, si la pregunta NO es visible, no se puede mostrar al usuario
     @Query("SELECT q FROM QuestionEntity q JOIN q.categories c WHERE c.name IN :categoryNames")
@@ -22,7 +23,8 @@ public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> 
 
     List<QuestionEntity> findByCreatedBy_Id(String userId);
 
-    Optional<QuestionEntity> findById(UUID id);
+    @Query("SELECT q FROM QuestionEntity q JOIN q.quizzes quiz WHERE quiz.id = :quizId AND q.id = :questionId")
+    Optional<QuestionEntity> findByQuizIdAndId(@Param("quizId") UUID quizId, @Param("questionId") UUID questionId);
 
     List<QuestionEntity> findByIsVisibleTrue();
 }
