@@ -49,6 +49,9 @@ public class QuestionEntity {
     @JoinColumn(name = "created_by", nullable = false)
     private UserEntity createdBy;
 
+    @Column(name = "is_visible", nullable = false)
+    private Boolean isVisible = Boolean.TRUE;
+
     public String getText() {
         return text;
     }
@@ -132,4 +135,11 @@ public class QuestionEntity {
     public UserEntity getCreatedBy() { return createdBy; }
 
     public void setCreatedBy(UserEntity createdBy) { this.createdBy = createdBy; }
+
+    public void setIsVisible(Boolean isVisible) {
+        this.isVisible = isVisible;
+    }
+    public Boolean getIsVisible() {
+        return isVisible;
+    }
 }
