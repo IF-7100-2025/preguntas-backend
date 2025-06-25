@@ -40,7 +40,7 @@ public class GetUserInformationProfileQueryTest {
     }
 
     @Test
-    public void testGetUserInformationProfile() {
+    public void testGetUserInformationProfileSuccess() {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         GetUserInformationProfileQuery.Result result = getUserInformationProfileQuery.getUserInformationProfile(userId);
         assertInstanceOf(GetUserInformationProfileQuery.Result.Success.class, result);

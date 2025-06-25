@@ -84,7 +84,7 @@ public class GetQuizQueryTest {
     }
 
     @Test
-    void testReturnsErrorWhenQuizNotFound() {
+    void testQuizNotFound() {
         when(quizRepository.findById(quizId)).thenReturn(Optional.empty());
 
         var result = getQuizQuery.query(quizId);

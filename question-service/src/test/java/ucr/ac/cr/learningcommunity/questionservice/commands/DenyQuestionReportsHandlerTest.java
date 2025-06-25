@@ -67,4 +67,22 @@ public class DenyQuestionReportsHandlerTest {
 
         verify(questionReportRepository).saveAll(pendingReports);
     }
+
+    @Test
+    void testDenyReportsWithNullId() {
+        ApiResponse response = denyReportsHandler.denyReports(null);
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.status());
+        assertEquals("questionId is required", response.msg());
+    }
+
+    @Test
+    void testDenyReportsWithInvalidIdFormat() {
+        String invalidId = "not-a-uuid";
+
+        ApiResponse response = denyReportsHandler.denyReports(invalidId);
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.status());
+        assertEquals("Invalid questionId format: " + invalidId, response.msg());
+    }
 }

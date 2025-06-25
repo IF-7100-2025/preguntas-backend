@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.4.3"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("jacoco")
 }
 
 group = "ucr.ac.cr.learningcommunity"
@@ -41,4 +42,25 @@ dependencyManagement {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	jvmArgs = listOf("-XX:+EnableDynamicAgentLoading")
+
+	tasks.test {
+		finalizedBy(tasks.jacocoTestReport)
+	}
+	tasks.jacocoTestReport {
+		dependsOn(tasks.test)
+	}
+}
+
+jacoco {
+	toolVersion = "0.8.13"
+	reportsDirectory = layout.buildDirectory.dir("customJacocoReportDir")
+}
+
+tasks.jacocoTestReport {
+	reports {
+		xml.required = false
+		csv.required = false
+		html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+	}
 }

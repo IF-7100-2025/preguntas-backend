@@ -50,7 +50,7 @@ public class DeleteQuestionHandlerTest {
     }
 
     @Test
-    void testDeleteQuestionHappyPath() {
+    void testDeleteQuestion() {
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
         when(questionReportRepository.findByQuestionAndStatus(question, "PENDING")).thenReturn(pendingReports);
 
@@ -68,5 +68,25 @@ public class DeleteQuestionHandlerTest {
 
         verify(questionRepository).save(question);
         verify(questionReportRepository).saveAll(pendingReports);
+    }
+
+    @Test
+    void testDeleteQuestionWithNullId() {
+        DeleteQuestionHandler.Result result = deleteQuestionHandler.deleteQuestion(null);
+
+        assertTrue(result instanceof DeleteQuestionHandler.Result.NotFound);
+        assertEquals(404, ((DeleteQuestionHandler.Result.NotFound) result).status());
+        assertEquals("questionId is required", ((DeleteQuestionHandler.Result.NotFound) result).msg());
+    }
+
+    @Test
+    void testDeleteQuestionWithNonExistentId() {
+        when(questionRepository.findById(questionId)).thenReturn(Optional.empty());
+
+        DeleteQuestionHandler.Result result = deleteQuestionHandler.deleteQuestion(questionId.toString());
+
+        assertTrue(result instanceof DeleteQuestionHandler.Result.NotFound);
+        assertEquals(404, ((DeleteQuestionHandler.Result.NotFound) result).status());
+        assertEquals("Question not found: " + questionId.toString(), ((DeleteQuestionHandler.Result.NotFound) result).msg());
     }
 }

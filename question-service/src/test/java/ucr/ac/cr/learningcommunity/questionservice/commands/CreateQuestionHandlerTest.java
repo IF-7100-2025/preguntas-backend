@@ -86,7 +86,7 @@ public class CreateQuestionHandlerTest {
     }
 
     @Test
-    void testCreateQuestionFailsWhenQuestionTextTooShort() {
+    void testTextTooShort() {
         questionRequest = new QuestionRequest(
                 "Test",
                 null,
@@ -106,7 +106,7 @@ public class CreateQuestionHandlerTest {
     }
 
     @Test
-    void testCreateQuestionFailsWhenAllAnswersAreCorrect() {
+    void testAllAnswersAreCorrect() {
         questionRequest = new QuestionRequest(
                 "¿Cuál número es par?",
                 null,

@@ -67,7 +67,7 @@ public class ChangePasswordHandlerTest {
     }
 
     @Test
-    void testChangePassword_UserNotFound_ShouldReturnError() {
+    void testUserNotFound() {
         ChangePasswordRequest request = new ChangePasswordRequest(currentPassword, newPassword);
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
@@ -80,7 +80,7 @@ public class ChangePasswordHandlerTest {
     }
 
     @Test
-    void testChangePassword_InvalidCurrentPassword() {
+    void testInvalidCurrentPassword() {
         ChangePasswordRequest request = new ChangePasswordRequest(currentPassword, newPassword);
 
         UserEntity user = new UserEntity();

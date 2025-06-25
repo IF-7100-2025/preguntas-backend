@@ -36,7 +36,7 @@ public class GetCategorySuggestionsQueryTest {
     }
 
     @Test
-    void testGetCategorySuggestions_returnsSuccess() {
+    void testGetCategorySuggestionsSuccess() {
         String question = "Cuál es la capital de Francia?";
         when(iaIntegrationClient.getCategorySuggestionsFromIA(question)).thenReturn(mockSuggestions);
 

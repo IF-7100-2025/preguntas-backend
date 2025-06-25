@@ -63,7 +63,7 @@ public class GetRandomCategoriesQueryTest {
     }
 
     @Test
-    public void testReturnsRandomCategoriesResponse() {
+    public void testRandomCategoriesSuccess() {
         when(categoryRepository.findAll()).thenReturn(testCategories);
         when(questionRepository.countByCategories_Id(anyLong())).thenReturn(10);
 

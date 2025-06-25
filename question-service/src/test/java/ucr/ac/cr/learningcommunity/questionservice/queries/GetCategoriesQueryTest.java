@@ -42,7 +42,7 @@ public class GetCategoriesQueryTest {
     }
 
     @Test
-    void testReturnsSuccessWithCategories() {
+    void testSuccessWithCategories() {
         List<CategoryEntity> mockCategories = Arrays.asList(category1, category2);
         when(categoryRepository.findAll()).thenReturn(mockCategories);
 
@@ -56,7 +56,7 @@ public class GetCategoriesQueryTest {
     }
 
     @Test
-    void testThrowsExceptionWhenRepositoryFails() {
+    void testRepositoryFails() {
         when(categoryRepository.findAll()).thenThrow(new RuntimeException("Database failure"));
 
         Exception exception = assertThrows(RuntimeException.class, () -> {

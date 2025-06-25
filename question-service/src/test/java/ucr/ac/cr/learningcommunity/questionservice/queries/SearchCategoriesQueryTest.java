@@ -33,7 +33,7 @@ public class SearchCategoriesQueryTest {
     private SearchCategoriesQueryImpl searchCategoriesQuery;
 
     @Test
-    public void testSearch_WithValidTerm_ReturnsSuccess() {
+    public void testSearchSuccess() {
 
         String term = "Matemáticas";
 
@@ -60,7 +60,7 @@ public class SearchCategoriesQueryTest {
     }
 
     @Test
-    public void testSearch_WithNullOrEmptyTerm_ReturnsEmptyList() {
+    public void testSearchEmptyList() {
         SearchCategoriesQuery.Result resultNull = searchCategoriesQuery.search(null);
         SearchCategoriesQuery.Result resultEmpty = searchCategoriesQuery.search("  ");
 
