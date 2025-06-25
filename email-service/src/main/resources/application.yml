@@ -2,7 +2,7 @@ spring:
   application:
     name: email-service
   config:
-    import: classpath:/email-credentials.yml
+    import: optional:classpath:/email-credentials.yml
   mail:
     host: smtp.sendgrid.net
     port: 587
