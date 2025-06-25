@@ -73,8 +73,8 @@ public class CreateQuizHandlerImpl implements CreateQuizHandler {
     }
 
     private void validateTotalQuestions(int totalQuestions) {
-        if (totalQuestions < 5) {
-            throw validationError("Quiz must have at least 5 questions");
+        if (totalQuestions < 1) {
+            throw validationError("Quiz must have at least 1 questions");
         }
 
         if (totalQuestions > 15) {
