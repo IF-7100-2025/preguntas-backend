@@ -49,7 +49,7 @@ public class GradeToQuizHandlerImpl implements GradeToQuizHandler {
         this.quizRepository = quizRepository;
         this.userRepository = userRepository;
         this.rankRepository = rankRepository;
-        this.questionReportRepository = questionReportRepository;  // ← nuevo
+        this.questionReportRepository = questionReportRepository;
 
     }
 
