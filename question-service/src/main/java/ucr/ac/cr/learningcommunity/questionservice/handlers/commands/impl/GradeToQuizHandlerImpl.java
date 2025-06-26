@@ -9,11 +9,7 @@ import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.AnswerOptionEnti
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.QuestionEntity;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.UserEntity;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.QuizEntity;
-import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.AnswerOptionRepository;
-import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.QuestionRepository;
-import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.QuizRepository;
-import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.UserRepository;
-import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.RankRepository;
+import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.*;
 import ucr.ac.cr.learningcommunity.questionservice.models.BaseException;
 import ucr.ac.cr.learningcommunity.questionservice.models.ErrorCode;
 
@@ -32,74 +28,86 @@ public class GradeToQuizHandlerImpl implements GradeToQuizHandler {
     private final QuizRepository quizRepository;
     private final UserRepository userRepository;
     private final RankRepository rankRepository;
+    private final QuestionReportRepository questionReportRepository;
 
     int totalQuestions;
     int correctAnswer;
 
     private static final int XP_PER_QUIZ_COMPLETED = 50;
 
-
     public GradeToQuizHandlerImpl(
             QuestionRepository questionRepository,
             AnswerOptionRepository answerOptionRepository,
             QuizRepository quizRepository,
             UserRepository userRepository,
-            RankRepository rankRepository
+            RankRepository rankRepository,
+            QuestionReportRepository questionReportRepository
+
     ) {
         this.questionRepository = questionRepository;
         this.answerOptionRepository = answerOptionRepository;
         this.quizRepository = quizRepository;
         this.userRepository = userRepository;
         this.rankRepository = rankRepository;
+        this.questionReportRepository = questionReportRepository;
+
     }
 
     @Transactional
     @Override
     public Result submitQuiz(GradeToQuizRequest gradeToQuizRequest, UUID quizId) {
+
         validateRequest(quizId);
 
         Optional<QuizEntity> optionalQuiz = quizRepository.findById(quizId);
-
-        if (optionalQuiz.isPresent()){
-            QuizEntity quiz = optionalQuiz.get();
-
-            if ("completed".equals(quiz.getStatus())) {
-                return new Result.Error(
-                        ErrorCode.VALIDATION_ERROR.getHttpStatus(),
-                        "Quiz already completed. No XP added."
-                );
-            }
-
-            totalQuestions = quizRepository.countQuestionsByQuizId(quizId);
-            correctAnswer = gradeQuiz(gradeToQuizRequest, quizId);
-
-            UserEntity user = quiz.getCreatedBy();
-            if (user != null) {
-                user.setXpAmount(user.getXpAmount() + XP_PER_QUIZ_COMPLETED);
-
-                UserEntity refreshedUser = userRepository.findById(user.getId())
-                        .orElseThrow(() -> validationError("User not found after XP update"));
-                int newXP = refreshedUser.getXpAmount();
-
-                rankRepository.findRankByXp(newXP)
-                        .ifPresent(rank -> refreshedUser.setCurrentRank(rank.getRank()));
-
-                userRepository.save(refreshedUser);
-            }
-
-
-            GradeToQuizResponse response = mapToGradeToQuizResponse(gradeToQuizRequest, quizId);
-
-            stateToQuiz(quizId);
-
-            return new Result.Success(response);
-
-        }else{
+        if (optionalQuiz.isEmpty()) {
             return new Result.Error(
                     ErrorCode.QUIZ_NOT_FOUND.getHttpStatus(),
                     ErrorCode.QUIZ_NOT_FOUND.getDefaultMessage()
             );
         }
+
+        QuizEntity quiz = optionalQuiz.get();
+        if ("completed".equals(quiz.getStatus())) {
+            return new Result.Error(
+                    ErrorCode.VALIDATION_ERROR.getHttpStatus(),
+                    "Quiz already completed. No XP added."
+            );
+        }
+
+        List<GradeToQuizRequest.QuestionResponse> validResponses = gradeToQuizRequest.questions().stream()
+                .filter(qr -> {
+                    QuestionEntity q = getQuestionById(qr.questionID(), quizId);
+                    boolean hasPendingOrInvisible = !q.getIsVisible()
+                            || !questionReportRepository.findByQuestionAndStatus(q, "PENDING").isEmpty();
+                    return !hasPendingOrInvisible;
+                })
+                .toList();
+
+        totalQuestions = validResponses.size();
+        GradeToQuizRequest filteredRequest = new GradeToQuizRequest(validResponses);
+        correctAnswer = gradeQuiz(filteredRequest, quizId);
+
+        int score = calculateScore(correctAnswer, totalQuestions);
+        quiz.setGrade(score);
+        quiz.setEndTime(LocalDateTime.now());
+        quizRepository.save(quiz);
+
+        UserEntity user = quiz.getCreatedBy();
+        if (user != null) {
+            user.setXpAmount(user.getXpAmount() + XP_PER_QUIZ_COMPLETED);
+            UserEntity refreshed = userRepository.findById(user.getId())
+                    .orElseThrow(() -> validationError("User not found after XP update"));
+            rankRepository.findRankByXp(refreshed.getXpAmount())
+                    .ifPresent(r -> refreshed.setCurrentRank(r.getRank()));
+            userRepository.save(refreshed);
+        }
+
+        GradeToQuizResponse response = mapToGradeToQuizResponse(filteredRequest, quizId);
+
+        stateToQuiz(quizId);
+
+        return new Result.Success(response);
     }
 
     private void stateToQuiz(UUID quizId){
@@ -115,16 +123,14 @@ public class GradeToQuizHandlerImpl implements GradeToQuizHandler {
             throw validationError("Quiz is required");
         }
     }
-
     private int gradeQuiz(GradeToQuizRequest request, UUID quizId) {
         int correctAnswers = 0;
 
         for (GradeToQuizRequest.QuestionResponse questionResponse : request.questions()) {
 
-            QuestionEntity question = getQuestionById(questionResponse.questionID(),quizId);
+            QuestionEntity question = getQuestionById(questionResponse.questionID(), quizId);
 
             List<AnswerOptionEntity> answerOptions = answerOptionRepository.findByQuestionId(question.getId());
-
             Set<Long> correctAnswerIds = answerOptions.stream()
                     .filter(AnswerOptionEntity::isCorrect)
                     .map(AnswerOptionEntity::getId)
@@ -134,7 +140,8 @@ public class GradeToQuizHandlerImpl implements GradeToQuizHandler {
                     .filter(correctAnswerIds::contains)
                     .count();
 
-            if (matches == correctAnswerIds.size() && questionResponse.selectedAnswersId().size() == correctAnswerIds.size()) {
+            if (matches == correctAnswerIds.size()
+                    && questionResponse.selectedAnswersId().size() == correctAnswerIds.size()) {
                 correctAnswers++;
             }
         }
