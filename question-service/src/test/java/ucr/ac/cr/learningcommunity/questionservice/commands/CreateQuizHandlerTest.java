@@ -43,7 +43,7 @@ public class CreateQuizHandlerTest {
 
     @BeforeEach
     void setup() {
-        userId = "mariaramos01";
+        userId = "b45b2c57-03b4-4970-9021-ccf5dcb6dacd";
         categories = List.of("Geografía");
         int totalQuestions = 5;
 
