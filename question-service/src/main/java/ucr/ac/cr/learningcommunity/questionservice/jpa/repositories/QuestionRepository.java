@@ -16,14 +16,27 @@ public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> 
     
     int countByCategories_Id(Long categoryId);
 
-    @Query("SELECT q FROM QuestionEntity q JOIN q.categories c WHERE c.name IN :categoryNames AND q.isVisible = true")
+    @Query("""
+    SELECT q
+    FROM QuestionEntity q
+    JOIN q.categories c
+    WHERE c.name IN :categoryNames
+      AND q.isVisible = true
+      AND NOT EXISTS (
+          SELECT 1
+          FROM QuestionReportEntity r
+          WHERE r.question = q
+            AND r.status = 'PENDING'
+      )
+    """)
     List<QuestionEntity> findByCategoryNames(@Param("categoryNames") List<String> categoryNames);
 
     List<QuestionEntity> findByCreatedBy_Id(String userId);
 
+    //Aquí se podría hacer lo de que no se muestren preguntas con reportes pendientes o no visibles en los quices.
     @Query("SELECT q FROM QuestionEntity q JOIN q.quizzes quiz WHERE quiz.id = :quizId AND q.id = :questionId")
     Optional<QuestionEntity> findByQuizIdAndId(@Param("quizId") UUID quizId, @Param("questionId") UUID questionId);
 
     List<QuestionEntity> findByIsVisibleTrue();
-    
+
 }

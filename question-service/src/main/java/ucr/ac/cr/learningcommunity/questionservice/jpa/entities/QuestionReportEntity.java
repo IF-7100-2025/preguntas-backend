@@ -34,7 +34,6 @@ public class QuestionReportEntity {
     private String status;
 
     public QuestionReportEntity() {
-        // JPA necesita constructor vacío
     }
 
     public QuestionReportEntity(UUID idReport,
@@ -52,9 +51,6 @@ public class QuestionReportEntity {
         this.reportedAt = (reportedAt != null ? reportedAt : new Date());
         this.status = status;
     }
-
-    // Si prefieres generar el UUID en la aplicación antes de persistir:
-    // al crear la instancia: new QuestionReportEntity(UUID.randomUUID(), question, user, ..., new Date(), "PENDING")
 
     public UUID getIdReport() {
         return idReport;
@@ -99,9 +95,6 @@ public class QuestionReportEntity {
     public Date getReportedAt() {
         return reportedAt;
     }
-
-    // No exponer setter de reportedAt si quieres inmutable; si sí, descomenta:
-    // public void setReportedAt(Date reportedAt) { this.reportedAt = reportedAt; }
 
     public String getStatus() {
         return status;
