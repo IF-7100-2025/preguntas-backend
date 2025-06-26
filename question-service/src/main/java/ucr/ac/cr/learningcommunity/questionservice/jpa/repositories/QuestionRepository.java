@@ -25,4 +25,5 @@ public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> 
     Optional<QuestionEntity> findByQuizIdAndId(@Param("quizId") UUID quizId, @Param("questionId") UUID questionId);
 
     List<QuestionEntity> findByIsVisibleTrue();
+    
 }
