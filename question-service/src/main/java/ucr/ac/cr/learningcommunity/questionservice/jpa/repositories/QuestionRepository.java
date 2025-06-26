@@ -16,9 +16,7 @@ public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> 
     
     int countByCategories_Id(Long categoryId);
 
-    // obtiene todas las preguntas de las categorías que el usuario indicó.
-    //TODO: Hay que hacerlo también por visibilidad, si la pregunta NO es visible, no se puede mostrar al usuario
-    @Query("SELECT q FROM QuestionEntity q JOIN q.categories c WHERE c.name IN :categoryNames")
+    @Query("SELECT q FROM QuestionEntity q JOIN q.categories c WHERE c.name IN :categoryNames AND q.isVisible = true")
     List<QuestionEntity> findByCategoryNames(@Param("categoryNames") List<String> categoryNames);
 
     List<QuestionEntity> findByCreatedBy_Id(String userId);
