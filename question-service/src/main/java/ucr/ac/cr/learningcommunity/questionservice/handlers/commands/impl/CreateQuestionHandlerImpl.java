@@ -60,9 +60,11 @@ public class CreateQuestionHandlerImpl implements CreateQuestionHandler {
 
         // Actualizamos XP, streak y fecha
         int newStreak = userRepository.calculateNewStreak(userId);
-        userRepository.updateProgress(userId, newStreak);
+        //CAMBIO AQUI: Pasar XP_PER_QUESTION como el tercer parámetro
+        userRepository.updateProgress(userId, newStreak, XP_PER_QUESTION);
 
-        //Refrescamos entidad para obtener XP actualizado
+
+
         UserEntity refreshedUser = userRepository.findById(userId)
                 .orElseThrow();
         int newXP = refreshedUser.getXpAmount();
