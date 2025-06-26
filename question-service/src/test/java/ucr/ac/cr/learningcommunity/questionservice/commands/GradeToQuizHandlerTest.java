@@ -11,7 +11,6 @@ import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.impl.GradeT
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.*;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.repositories.*;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +24,7 @@ public class GradeToQuizHandlerTest {
     @Mock private QuizRepository quizRepository;
     @Mock private UserRepository userRepository;
     @Mock private RankRepository rankRepository;
+    @Mock private QuestionReportRepository questionReportRepository;
 
     @InjectMocks
     private GradeToQuizHandlerImpl handler;
@@ -61,6 +61,7 @@ public class GradeToQuizHandlerTest {
         question.setId(questionId);
         question.setText("¿Capital de Francia?");
         question.setExplanation("París es la capital de Francia.");
+        question.setIsVisible(true);
 
         AnswerOptionEntity correctAnswer = new AnswerOptionEntity();
         correctAnswer.setId(1L);
@@ -69,11 +70,11 @@ public class GradeToQuizHandlerTest {
         correctAnswer.setQuestion(question);
 
         when(quizRepository.findById(quizId)).thenReturn(Optional.of(quiz));
-        when(quizRepository.countQuestionsByQuizId(quizId)).thenReturn(1);
         when(questionRepository.findByQuizIdAndId(quizId, questionId)).thenReturn(Optional.of(question));
         when(answerOptionRepository.findByQuestionId(questionId)).thenReturn(List.of(correctAnswer));
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(rankRepository.findRankByXp(anyInt())).thenReturn(Optional.empty());
+        when(questionReportRepository.findByQuestionAndStatus(question, "PENDING")).thenReturn(List.of());
 
         GradeToQuizHandler.Result result = handler.submitQuiz(request, quizId);
 
@@ -98,13 +99,29 @@ public class GradeToQuizHandlerTest {
     @Test
     void submitQuizFailsWhenQuestionNotInQuiz() {
         when(quizRepository.findById(quizId)).thenReturn(Optional.of(quiz));
-        when(quizRepository.countQuestionsByQuizId(quizId)).thenReturn(1);
         when(questionRepository.findByQuizIdAndId(quizId, questionId)).thenReturn(Optional.empty());
-
         RuntimeException ex = assertThrows(RuntimeException.class, () ->
                 handler.submitQuiz(request, quizId)
         );
 
         assertTrue(ex.getMessage().toLowerCase().contains("question not found"));
+    }
+
+    @Test
+    void testQuestionWithPendingReportIsIgnored() {
+        QuestionEntity question = new QuestionEntity();
+        question.setId(questionId);
+        question.setText("¿Capital de Francia?");
+        question.setIsVisible(true);
+
+        when(quizRepository.findById(quizId)).thenReturn(Optional.of(quiz));
+        when(questionRepository.findByQuizIdAndId(quizId, questionId)).thenReturn(Optional.of(question));
+        when(questionReportRepository.findByQuestionAndStatus(question, "PENDING")).thenReturn(List.of(new QuestionReportEntity()));
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        GradeToQuizHandler.Result result = handler.submitQuiz(request, quizId);
+
+        assertInstanceOf(GradeToQuizHandler.Result.Success.class, result);
+        GradeToQuizHandler.Result.Success success = (GradeToQuizHandler.Result.Success) result;
+        assertEquals(0, success.gradeToQuizResponse().grade());
     }
 }
