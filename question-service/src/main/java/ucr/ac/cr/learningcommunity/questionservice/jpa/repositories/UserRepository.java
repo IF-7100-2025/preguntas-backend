@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity, String> {
 
     @Query(value = """
-        SELECT 
+        SELECT
             CASE
                 WHEN CURRENT_DATE - DATE(last_activity) = 1 THEN daily_streak + 1
                 WHEN CURRENT_DATE - DATE(last_activity) = 0 THEN daily_streak
@@ -26,15 +26,19 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     @Transactional
     @Query(value = """
         UPDATE users
-        SET 
-            xp_amount = xp_amount + 10,
+        SET
+            xp_amount = xp_amount + :xpToAdd,
             daily_streak = :newStreak,
             last_activity = CURRENT_DATE
         WHERE id_user = :userId
     """, nativeQuery = true)
-    void updateProgress(@Param("userId") String userId, @Param("newStreak") int newStreak);
+    void updateProgress(
+            @Param("userId") String userId,
+            @Param("newStreak") int newStreak,
+            @Param("xpToAdd") int xpToAdd
+    );
 
-    // Ya existentes
+
     Optional<UserEntity> findById(String id);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
