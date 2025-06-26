@@ -37,7 +37,6 @@ public class GradeToQuizHandlerImpl implements GradeToQuizHandler {
 
     private static final int XP_PER_QUIZ_COMPLETED = 50;
 
-
     public GradeToQuizHandlerImpl(
             QuestionRepository questionRepository,
             AnswerOptionRepository answerOptionRepository,
