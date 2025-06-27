@@ -50,9 +50,9 @@ public class QuestionController {
         };
     }
 
-    @GetMapping("/progress")
-    public ResponseEntity<?> getUserProgress(@RequestHeader("username") String username) {
-        var result = progressHandler.getProgressUser(username);
+    @GetMapping("/progress/{userId}")
+    public ResponseEntity<?> getUserProgress(@PathVariable("userId") String userId) {
+        var result = progressHandler.getProgressUserById(userId);
         return switch (result) {
             case GetProgressQuery.Result.Success success ->
                     ResponseEntity.ok(success.userProgress());
