@@ -50,12 +50,12 @@ public class GetProgressQueryTest {
     }
 
     @Test
-    void testGetProgressUser() {
-        when(userRepository.findByUsername("robert_gamer")).thenReturn(Optional.of(mockUser));
+    void testGetProgressUserById() {
+        when(userRepository.findById("689a184b-2046-45e2-8ee2-8a00ff203df1")).thenReturn(Optional.of(mockUser));
         when(rankRepository.findRankByXp(150)).thenReturn(Optional.of(currentRank));
         when(rankRepository.findNextRankByCurrentXP(150)).thenReturn(Optional.of(nextRank));
 
-        GetProgressQuery.Result result = getProgressQuery.getProgressUser("robert_gamer");
+        GetProgressQuery.Result result = getProgressQuery.getProgressUserById("689a184b-2046-45e2-8ee2-8a00ff203df1");
 
         assertTrue(result instanceof GetProgressQuery.Result.Success);
         UserProgressResponse response = ((GetProgressQuery.Result.Success) result).userProgress();

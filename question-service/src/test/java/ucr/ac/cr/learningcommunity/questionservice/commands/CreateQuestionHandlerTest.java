@@ -81,7 +81,8 @@ public class CreateQuestionHandlerTest {
 
         assertTrue(result instanceof CreateQuestionHandler.Result.Success);
         assertEquals("Question created successfully", ((CreateQuestionHandler.Result.Success) result).msg());
-        verify(userRepository).updateProgress("a8e9c9f4-15c3-43e3-9018-2f1684510341", 1);
+
+        verify(userRepository).updateProgress("a8e9c9f4-15c3-43e3-9018-2f1684510341", 1, 10);
         verify(userRepository).save(user);
     }
 
