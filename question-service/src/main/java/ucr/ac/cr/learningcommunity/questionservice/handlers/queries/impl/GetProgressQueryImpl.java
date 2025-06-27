@@ -14,7 +14,7 @@ import ucr.ac.cr.learningcommunity.questionservice.api.types.response.RankInfoNe
 import java.util.Optional;
 
 @Service
-public class GetProgressQueryImpl implements GetProgressQuery { // Assuming GetProgressQuery interface will be updated
+public class GetProgressQueryImpl implements GetProgressQuery {
     private final UserRepository userRepository;
     private final RankRepository rankRepository;
 
@@ -32,7 +32,7 @@ public class GetProgressQueryImpl implements GetProgressQuery { // Assuming GetP
 
     public Result getProgressUserById(String userId) {
         try {
-            Optional<UserEntity> userOpt = userRepository.findById(userId); // *** Changed to findById ***
+            Optional<UserEntity> userOpt = userRepository.findById(userId); // Se cambió a findById
             if (userOpt.isEmpty()) {
                 return new Result.Error(ErrorCode.USER_NOT_FOUND.getHttpStatus(), ErrorCode.USER_NOT_FOUND.getDefaultMessage());
             }
@@ -105,8 +105,6 @@ public class GetProgressQueryImpl implements GetProgressQuery { // Assuming GetP
             return new Result.Success(response);
 
         } catch (Exception e) {
-            // Log the exception for debugging
-            System.err.println("Error obtaining user rank for userId " + userId + ": " + e.getMessage());
             return new Result.Error(ErrorCode.ERROR_NOT_IDENTIFIED.getHttpStatus(), "Error obtaining user rank: " + e.getMessage());
         }
     }
