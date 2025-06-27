@@ -1,35 +1,37 @@
 spring:
-  application:
-    name: email-service
-  config:
-    import: optional:classpath:/email-credentials.yml
   mail:
     host: smtp.sendgrid.net
     port: 587
+    username: ${SENDGRID_USERNAME:apikey}
+    password: ${SENDGRID_PASSWORD}
     properties:
       mail:
         smtp:
           auth: true
-          properties:
-            starttls:
-              enable: true
+          starttls:
+            enable: true
+    from: ${EMAIL_FROM:contilearningcommunity.cr@gmail.com}
+
   kafka:
-    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    bootstrap-servers: kafka:29092
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
+
 eureka:
   client:
     registerWithEureka: true
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://eureka-server:8761/eureka/
   instance:
+    hostname: email-service
     preferIpAddress: true
 
 topic:
   client:
-    name: user-registered-topic2
+    name: ${KAFKA_TOPIC:user-registered-topic2}
+
 server:
   port: 8085

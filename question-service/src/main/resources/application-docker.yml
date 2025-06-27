@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres-questions:5432/questions_db
+    username: postgres
+    password: ${POSTGRES_PASSWORD}
+  kafka:
+    bootstrap-servers: kafka:29092
+
+eureka:
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka/
+  instance:
+    hostname: question-service
+
+ia-service:
+  url: http://ia-service:8083/api/private/ia
+
+liquibase:
+  change-log: classpath:db/changelog/db.changelog-master.yaml
