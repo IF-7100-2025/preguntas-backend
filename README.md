@@ -1,24 +1,24 @@
-_# 📚 Plataforma de Aprendizaje Colaborativo - v1.0
+# 📚 Plataforma de Aprendizaje Colaborativo - v1.0
 **Proyecto  | Ingeniería del Software UCR - 2025**  
 **Grupo Conti**
+**Fecha: 2025-06-26**
 
 ---
 
 ## 🖥️ **Visión General**
 Desarrollar una plataforma para que las personas puedan:  
-✅ Crear y organizar preguntas por materias  
+✅ Crear  preguntas por categorías
+
 ✅ Generar pruebas de estudio automáticamente  
-✅ Evaluar la calidad del contenido mediante votaciones
 
 ---
 
 ## 🛠️ **Stack Tecnológico (Propuesta Inicial)**
-| Componente       | Tecnología       |
-|-----------------|------------------|
-| Frontend        | React.js + Vite  |
-| Estilos         | TailwindCSS      |
-| Backend         | Spring Boot 3.4  |
-| Autenticación   | JWT              |
+| Componente       | Tecnología    |
+|-----------------|---------------|
+| Frontend        | React.js + Vite |
+| Backend         | Spring Boot   |
+| Autenticación   | JWT           |
 
 ---
 
@@ -37,7 +37,7 @@ Desarrollar una plataforma para que las personas puedan:
     - Reporte de contenido
 
 ---
-## 🔄 **Release 1.0.0**
+## 🔄 **Release 2.0.0**
 
 ##### **Funcionalidades completadas:**
 

@@ -5,17 +5,37 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ucr.ac.cr.learningcommunity.questionservice.jpa.entities.QuestionEntity;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface QuestionRepository extends JpaRepository<QuestionEntity, Long>  {
 
-    //long countByCategory_Id(Long id);
+    Optional<QuestionEntity> findById(UUID uuid);
+
     long countByText(String text);
     
     int countByCategories_Id(Long categoryId);
-  
-    // obtiene todas las preguntas de las categorías que el usuario indicó
-    @Query("SELECT q FROM QuestionEntity q JOIN q.categories c WHERE c.name IN :categoryNames")
+
+    @Query("""
+    SELECT q
+    FROM QuestionEntity q
+    JOIN q.categories c
+    WHERE c.name IN :categoryNames
+      AND q.isVisible = true
+      AND NOT EXISTS (
+          SELECT 1
+          FROM QuestionReportEntity r
+          WHERE r.question = q
+            AND r.status = 'PENDING'
+      )
+    """)
     List<QuestionEntity> findByCategoryNames(@Param("categoryNames") List<String> categoryNames);
+
+    List<QuestionEntity> findByCreatedBy_Id(String userId);
+
+    @Query("SELECT q FROM QuestionEntity q JOIN q.quizzes quiz WHERE quiz.id = :quizId AND q.id = :questionId")
+    Optional<QuestionEntity> findByQuizIdAndId(@Param("quizId") UUID quizId, @Param("questionId") UUID questionId);
+
+    List<QuestionEntity> findByIsVisibleTrue();
 
 }

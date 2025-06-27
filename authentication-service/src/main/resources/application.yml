@@ -5,7 +5,7 @@ spring:
     import:
       - optional:file:./preguntas-backend/shared-config/application-db-secrets.yml
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -49,3 +49,7 @@ logging:
   level:
     org.springframework.web: DEBUG
     org.hibernate: ERROR
+
+redis:
+  host: redis
+  port: 6379

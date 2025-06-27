@@ -19,15 +19,19 @@ public class UserAuthenticationQuery {
     public AuthenticatedUser loadUserByUsername(String username) {
         Optional<User> user = repository.findByUsername(username);
         if (user.isPresent()) {
+            User u = user.get();
             return new AuthenticatedUser(
-                    user.get().getId(),
-                    user.get().getEmail(),
-                    user.get().getPassword(),
-                    user.get().getRoleNames()
+                    u.getId(),
+                    u.getUsername(),
+                    u.getEmail(),
+                    u.getPassword(),
+                    u.getRoleNames(),
+                    u.isVerified()
             );
         } else {
             throw exceptionBuilder().message("User not found with email: " + username).build();
         }
     }
+
 }
 

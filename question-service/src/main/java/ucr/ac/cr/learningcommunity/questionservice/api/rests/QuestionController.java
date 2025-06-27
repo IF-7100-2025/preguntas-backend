@@ -4,10 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.request.CategorizeSuggestionRequest;
+import ucr.ac.cr.learningcommunity.questionservice.api.types.request.ProgressRequest;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.request.QuestionRequest;
 import ucr.ac.cr.learningcommunity.questionservice.api.types.response.ApiResponse;
+import ucr.ac.cr.learningcommunity.questionservice.api.types.response.UserProgressResponse;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.CreateQuestionHandler;
+import ucr.ac.cr.learningcommunity.questionservice.handlers.commands.DeleteQuestionHandler;
 import ucr.ac.cr.learningcommunity.questionservice.handlers.queries.GetCategorySuggestionsQuery;
+import ucr.ac.cr.learningcommunity.questionservice.handlers.queries.GetProgressQuery;
+import ucr.ac.cr.learningcommunity.questionservice.handlers.queries.GetQuestionsQuery;
+
 
 @RestController
 @RequestMapping("/api/private/questions")
@@ -15,13 +21,22 @@ public class QuestionController {
 
     private final GetCategorySuggestionsQuery suggestionsHandler;
     private final CreateQuestionHandler createQuestionHandler;
+    private final GetProgressQuery progressHandler;
+    private final GetQuestionsQuery getQuestionsQuery;
+
+    @Autowired
+    private DeleteQuestionHandler deleteQuestionHandler;
 
     @Autowired
     public QuestionController(
             GetCategorySuggestionsQuery suggestionsHandler,
-            CreateQuestionHandler createQuestionHandler) {
+            CreateQuestionHandler createQuestionHandler,
+            GetQuestionsQuery getQuestionsQuery,
+            GetProgressQuery progressHandler) {
         this.suggestionsHandler = suggestionsHandler;
         this.createQuestionHandler = createQuestionHandler;
+        this.progressHandler = progressHandler;
+        this.getQuestionsQuery = getQuestionsQuery;
     }
 
     @PostMapping("/suggestions")
@@ -34,14 +49,57 @@ public class QuestionController {
             case GetCategorySuggestionsQuery.Result.InternalError internalError -> ResponseEntity.status(internalError.status()).body(internalError.msg());
         };
     }
+
+    @GetMapping("/progress/{userId}")
+    public ResponseEntity<?> getUserProgress(@PathVariable("userId") String userId) {
+        var result = progressHandler.getProgressUserById(userId);
+        return switch (result) {
+            case GetProgressQuery.Result.Success success ->
+                    ResponseEntity.ok(success.userProgress());
+            case GetProgressQuery.Result.Error error ->
+                    ResponseEntity.status(error.status())
+                            .body(new ApiResponse(error.status(), error.message()));
+        };
+    }
+
     @PostMapping
     public ResponseEntity<?> createQuestion(@RequestBody QuestionRequest request,
                                             @RequestHeader("id") String id) {
         var result = createQuestionHandler.createQuestion(request, id);
-       return switch (result) {
-            case CreateQuestionHandler.Result.Success success ->  ResponseEntity.ok().body(new ApiResponse(success.status(), success.msg()));
-            case CreateQuestionHandler.Result.Unauthorized unauthorized ->  ResponseEntity.status(unauthorized.status()).body(new ApiResponse(unauthorized.status(), unauthorized.msg()));
-            case CreateQuestionHandler.Result.InternalError internalError ->  ResponseEntity.status(internalError.status()).body(new ApiResponse(internalError.status(), internalError.msg()));
+        return switch (result) {
+            case CreateQuestionHandler.Result.Success success -> ResponseEntity.ok().body(new ApiResponse(success.status(), success.msg()));
+            case CreateQuestionHandler.Result.Unauthorized unauthorized -> ResponseEntity.status(unauthorized.status()).body(new ApiResponse(unauthorized.status(), unauthorized.msg()));
+            case CreateQuestionHandler.Result.InternalError internalError -> ResponseEntity.status(internalError.status()).body(new ApiResponse(internalError.status(), internalError.msg()));
+        };
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getQuestionsByUser(@RequestHeader("id") String userId) {
+        try {
+            var questions = getQuestionsQuery.getQuestionsByUserId(userId);
+            return ResponseEntity.ok(questions);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error getting questions from user: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteQuestion(
+            @PathVariable("id") String questionId
+    ) {
+        var result = deleteQuestionHandler.deleteQuestion(questionId);
+        return switch (result) {
+            case DeleteQuestionHandler.Result.Success success ->
+                    ResponseEntity.ok(new ApiResponse(success.status(), success.msg()));
+            case DeleteQuestionHandler.Result.Unauthorized unauthorized ->
+                    ResponseEntity.status(unauthorized.status())
+                            .body(new ApiResponse(unauthorized.status(), unauthorized.msg()));
+            case DeleteQuestionHandler.Result.NotFound notFound ->
+                    ResponseEntity.status(notFound.status())
+                            .body(new ApiResponse(notFound.status(), notFound.msg()));
+            case DeleteQuestionHandler.Result.InternalError internalError ->
+                    ResponseEntity.status(internalError.status())
+                            .body(new ApiResponse(internalError.status(), internalError.msg()));
         };
     }
 }

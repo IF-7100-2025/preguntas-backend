@@ -49,7 +49,7 @@ public class UserAuthenticationQueryTest {
         AuthenticatedUser result = userAuthenticationQuery.loadUserByUsername(user.getUsername());
         assertNotNull(result);
         assertEquals(user.getId(), result.id());
-        assertEquals(user.getEmail(), result.username());
+        assertEquals(user.getUsername(), result.username());
         assertEquals(user.getPassword(), result.password());
         assertTrue(result.authorities().contains("Admin"));
     }

@@ -17,7 +17,145 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,PLAINTEXT_HOST://0.0.0.0:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     ports:
       - "9092:9092"
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+### arriba local abajo prod ###
+  # Bases de datos
+  postgres-auth:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_PASSWORD: vacalola
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-auth-data:/var/lib/postgresql/data
+
+  postgres-questions:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: questions_db
+      POSTGRES_PASSWORD: vacalola
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-questions-data:/var/lib/postgresql/data
+
+  postgres-ia:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ia_db
+      POSTGRES_PASSWORD: vacalola
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-ia-data:/var/lib/postgresql/data
+
+  # Servicios de descubrimiento y gateway
+  eureka-server:
+    build:
+      context: ./eureka
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    depends_on:
+      - postgres-auth
+      - postgres-questions
+      - postgres-ia
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      ALLOWED_ORIGINS: http://localhost:5173
+      JWT_SECRET: ${GATEWAY_JWT_SECRET}       # cambiar clave secreta 3
+
+  # MicroS
+  authentication-service:
+    build:
+      context: ./authentication-service
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    depends_on:
+      - eureka-server
+      - postgres-auth
+      - redis
+      - kafka
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-auth:5432/auth_db
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}            # cambiar clave secreta 1
+      SPRING_REDIS_HOST: redis
+
+  question-service:
+    build:
+      context: ./question-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      - eureka-server
+      - postgres-questions
+      - kafka
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-questions:5432/questions_db
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  ia-service:
+    build:
+      context: ./ia-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    depends_on:
+      - eureka-server
+      - postgres-ia
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-ia:5432/ia_db
+      OPENAI_API_KEY: ${OPENAI_API_KEY}             # cambiar api key
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  email-service:
+    build:
+      context: ./email-service
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8085"
+    depends_on:
+      - eureka-server
+      - kafka
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SENDGRID_PASSWORD: ${SENDGRID_API_KEY}        # cambiar api key 2
+
+volumes:
+  postgres-auth-data:
+  postgres-questions-data:
+  postgres-ia-data:
+
+networks:
+  default:
+    driver: bridge
