@@ -23,10 +23,16 @@ public class GetProgressQueryImpl implements GetProgressQuery {
         this.rankRepository = rankRepository;
     }
 
+
     @Override
     public Result getProgressUser(String username) {
+        return new Result.Error(ErrorCode.ERROR_NOT_IDENTIFIED.getHttpStatus(), "Method not implemented for username lookup by default now.");
+    }
+
+
+    public Result getProgressUserById(String userId) {
         try {
-            Optional<UserEntity> userOpt = userRepository.findByUsername(username);
+            Optional<UserEntity> userOpt = userRepository.findById(userId); // Se cambió a findById
             if (userOpt.isEmpty()) {
                 return new Result.Error(ErrorCode.USER_NOT_FOUND.getHttpStatus(), ErrorCode.USER_NOT_FOUND.getDefaultMessage());
             }
@@ -53,20 +59,39 @@ public class GetProgressQueryImpl implements GetProgressQuery {
                 RankEntity nextRankEntity = nextRankOpt.get();
                 int requiredXP = nextRankEntity.getMinXP() - currentXP;
 
+                requiredXP = Math.max(0, requiredXP);
+
                 nextRank = new RankInfoNext(
                         nextRankEntity.getRank(),
                         requiredXP
                 );
             } else {
+
                 nextRank = new RankInfoNext(null, null);
             }
 
-            // Construir respuesta plana
+
             String rankName = currentRank.name();
-            String nextRankName = nextRank.name() == null ? null : nextRank.name();
-            double progress = nextRank.requiredXP() == null
-                    ? 100.0
-                    : (double) currentXP * 100 / (currentXP + nextRank.requiredXP());
+            String nextRankName = nextRank.name();
+            double progress;
+            if (nextRank.requiredXP() == null || nextRank.requiredXP() == 0) {
+                progress = 100.0;
+            } else {
+
+                double xpInCurrentRank = currentXP - currentRankEntity.getMinXP();
+                double xpToNextRankBoundary = currentRankEntity.getMaxXP() != null ?
+                        (currentRankEntity.getMaxXP() - currentRankEntity.getMinXP()) :
+                        (currentXP + nextRank.requiredXP() - currentRankEntity.getMinXP());
+
+                if (xpToNextRankBoundary <= 0) {
+                    progress = 100.0;
+                } else {
+                    progress = (xpInCurrentRank / xpToNextRankBoundary) * 100.0;
+                }
+
+                progress = Math.min(100.0, Math.max(0.0, progress));
+            }
+
 
             UserProgressResponse response = new UserProgressResponse(
                     currentXP,
@@ -80,7 +105,7 @@ public class GetProgressQueryImpl implements GetProgressQuery {
             return new Result.Success(response);
 
         } catch (Exception e) {
-            return new Result.Error(ErrorCode.ERROR_NOT_IDENTIFIED.getHttpStatus(), "error obtaining user rank: " + e.getMessage());
+            return new Result.Error(ErrorCode.ERROR_NOT_IDENTIFIED.getHttpStatus(), "Error obtaining user rank: " + e.getMessage());
         }
     }
 }
