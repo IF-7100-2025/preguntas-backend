@@ -59,7 +59,7 @@ jobs:
             question-service
           )
 
-          VERSION_TAG=1.0
+          VERSION_TAG=2.0
           for service in "${services[@]}"; do
             IMAGE_NAME="${{ secrets.DOCKERHUB_USERNAME }}/${service}"
 
