@@ -15,7 +15,7 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "http://localhost:5173"
+            allowedOrigins: "http://preguntas-frontend:5173"
             allowedMethods:
               - GET
               - POST
@@ -30,7 +30,7 @@ spring:
             - Path=/api/public/ia/**, /api/private/ia/**
           metadata:
             cors:
-              allowedOrigins: "http://localhost:5173"
+              allowedOrigins: "http://preguntas-frontend:5173"
               allowedMethods:
                 - GET
                 - POST
@@ -44,7 +44,7 @@ spring:
             - Path=/api/public/questions/**, /api/private/questions/**
           metadata:
             cors:
-              allowedOrigins: "http://localhost:5173"
+              allowedOrigins: "http://preguntas-frontend:5173"
               allowedMethods:
                 - GET
                 - POST
@@ -58,7 +58,7 @@ spring:
             - Path=/api/public/auth/**, /api/private/auth/**
           metadata:
             cors:
-              allowedOrigins: "http://localhost:5173"
+              allowedOrigins: "http://preguntas-frontend:5173"
               allowedMethods:
                 - GET
                 - POST

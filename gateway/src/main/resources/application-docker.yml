@@ -17,7 +17,7 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "${ALLOWED_ORIGINS:http://localhost:5173}"
+            allowedOrigins: "${ALLOWED_ORIGINS:http://preguntas-frontend:5173}"
             allowedMethods: "*"
             allowedHeaders: "*"
       routes:
