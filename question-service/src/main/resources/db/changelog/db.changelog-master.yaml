@@ -152,3 +152,12 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
+  - changeSet:
+      id: 16
+      author: axel
+      changes:
+        - sqlFile:
+            path: 007-insert-admins.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
