@@ -38,3 +38,11 @@ databaseChangeLog:
         - sqlFile:
             path: 003-add-is_verified-column.sql
             relativeToChangelogFile: true
+
+  - changeSet:
+      id: 4
+      author: Axel
+      changes:
+        - sqlFile:
+            path: 004-insert-admins.sql
+            relativeToChangelogFile: true
